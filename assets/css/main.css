@@ -4,6 +4,66 @@
 @source "../../pages/";
 @source "../../error.vue";
 
-html {
-  font-size: 14px;
+@layer base {
+  html {
+    font-size: 14px; /* Default font size */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    @apply bg-slate-100 text-slate-800; /* Light theme base */
+  }
+  .card {
+    @apply bg-white shadow-lg rounded-xl p-6 border border-slate-200;
+  }
+  .table th {
+    @apply p-3 text-left font-semibold text-slate-600 border-b border-slate-300;
+  }
+  .table td {
+    @apply p-3 text-left border-b border-slate-200;
+  }
+  .table tbody tr:nth-child(odd) {
+    @apply bg-slate-50;
+  }
+  .table tbody tr:hover {
+    @apply bg-slate-100;
+  }
+  /* Sidebar Link Styling */
+  .nav-link-base {
+    @apply flex items-center px-3 py-2.5 rounded-lg transition-colors duration-150 w-full text-left;
+  }
+  .nav-link {
+    @apply text-slate-700 hover:bg-slate-200 hover:text-slate-900;
+  }
+  .nav-link-active {
+    @apply bg-sky-600 text-white hover:bg-sky-700 hover:text-white;
+  }
+  .sub-nav-link {
+    @apply text-slate-600 hover:bg-slate-200 hover:text-slate-800 block;
+  }
+}
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-lg font-semibold transition-colors duration-150;
+  }
+  .btn-primary {
+    @apply bg-sky-600 text-white hover:bg-sky-700;
+  }
+  .btn-secondary {
+    @apply bg-slate-200 text-slate-700 hover:bg-slate-300;
+  }
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: theme('colors.slate.100');
+  }
+  ::-webkit-scrollbar-thumb {
+    background: theme('colors.slate.400');
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: theme('colors.slate.500');
+  }
 }
