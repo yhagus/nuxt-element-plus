@@ -1,0 +1,9 @@
+@import 'tailwindcss';
+@source "../../components/";
+@source "../../layouts/";
+@source "../../pages/";
+@source "../../error.vue";
+
+html {
+  font-size: 14px;
+}
