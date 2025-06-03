@@ -24,7 +24,6 @@ export interface FormOperations<DefaultResponseType = any> {
   processing: boolean;
   errors: Record<string, string[]>;
   response: Record<string, any> | null;
-  // You might also want methods like 'reset' or 'setData'
 }
 
 export default function useForm<TData extends object, DefaultResponseType = any>(
@@ -55,9 +54,9 @@ export default function useForm<TData extends object, DefaultResponseType = any>
         'response',
         'post',
         'patch',
-        'delete', // Changed from 'remove'
+        'delete',
         'submit',
-        'rules', // Assuming 'rules' might be a property you don't want to submit
+        'rules',
       ];
 
       let requestBody: FormData | Record<string, any>;
@@ -67,17 +66,14 @@ export default function useForm<TData extends object, DefaultResponseType = any>
         if (Object.prototype.hasOwnProperty.call(form, key) && !excludedKeys.includes(key)) {
           let value: any = (form as any)[key];
 
-          // Trim strings
           if (typeof value === 'string') {
             value = value.trim();
           }
 
-          // Determine if the request should be multipart
           if (value instanceof File || (Array.isArray(value) && value.some(item => item instanceof File))) {
             isMultipart.value = true;
           }
 
-          // Populate formDataBody and plainBodyObject
           if (value instanceof File) {
             formDataBody.append(key, value);
           }
@@ -85,19 +81,16 @@ export default function useForm<TData extends object, DefaultResponseType = any>
             value.forEach((file: File) => formDataBody.append(`${key}[]`, file));
           }
           else if (Array.isArray(value)) {
-            // Array of other types (including objects, strings, numbers)
             value.forEach((item: any, index: number) => {
-              const fieldName = `${key}[${index}]`; // e.g., elements[0], elements[1]
+              const fieldName = `${key}[${index}]`;
               if (typeof item === 'object' && item !== null && !(item instanceof File)) {
-                // **MODIFIED PART: Stringify objects within arrays for FormData**
                 formDataBody.append(fieldName, JSON.stringify(item));
               }
               else {
-                // For primitives or other non-File, non-object types in the array
-                formDataBody.append(fieldName, String(item)); // Ensure it's a string for FormData
+                formDataBody.append(fieldName, String(item));
               }
             });
-            plainBodyObject[key] = value; // Keep original array for plain JSON body
+            plainBodyObject[key] = value;
           }
           else if (typeof value === 'object' && value !== null && !(value instanceof File)) {
             formDataBody.append(key, JSON.stringify(value));
@@ -121,39 +114,28 @@ export default function useForm<TData extends object, DefaultResponseType = any>
         ...options,
         method,
         body: requestBody,
-        headers: {
-          ...(isMultipart.value ? {} : { 'Content-Type': 'application/json' }),
-          ...(options?.headers || {}),
+        onRequestError() {
+          form.processing = false;
+        },
+        onResponse(context) {
+          if (context.response.ok) {
+            form.response = context.response._data;
+          }
+          form.errors = {};
+          form.processing = false;
+          if (options?.onResponse && typeof options.onResponse === 'function') {
+            options.onResponse(context);
+          }
+        },
+        onResponseError(context) {
+          form.errors = context.response._data;
+          if (options?.onResponseError && typeof options.onResponseError === 'function') {
+            options.onResponseError(context);
+          }
         },
       };
 
-      try {
-        const nuxtApp = useNuxtApp();
-        const data = await (nuxtApp.$api as typeof $fetch)<APIResponseType>(url, fetchOptions);
-
-        form.response = data;
-        form.errors = {}; // Clear errors on success
-        return data;
-      }
-      catch (error: any) {
-        if (error.data && error.data.errors) {
-          form.errors = error.data.errors;
-        }
-        else if (error.data && typeof error.data === 'object') {
-          form.errors = { general: [error.data.message || 'An error occurred.'] };
-        }
-        else if (error.message) {
-          form.errors = { general: [error.message] };
-        }
-        else {
-          form.errors = { general: ['An unknown error occurred.'] };
-        }
-        form.response = null;
-        throw error;
-      }
-      finally {
-        form.processing = false;
-      }
+      return (useNuxtApp().$api as typeof $fetch)<APIResponseType>(url, fetchOptions);
     },
 
     post: <APIResponseType = DefaultResponseType>(
@@ -170,7 +152,7 @@ export default function useForm<TData extends object, DefaultResponseType = any>
       return form.submit<APIResponseType>('PATCH', url, options);
     },
 
-    delete: <APIResponseType = DefaultResponseType>( // Changed from 'remove'
+    delete: <APIResponseType = DefaultResponseType>(
       url: NitroFetchRequest,
       options?: NitroFetchOptions<NitroFetchRequest>,
     ) => {
