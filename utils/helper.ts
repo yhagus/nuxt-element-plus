@@ -17,7 +17,7 @@ export function momentJs(
   }
 }
 
-export function URLRouteQuery(query: Record<string, any>, route?: string) {
+export function URLRouteQuery(query: any, route?: string) {
   const $route = useRoute();
   const $router = useRouter();
 
@@ -63,4 +63,17 @@ export function blobToURL(blob: Blob | null | undefined): string | null {
     return null;
   }
   return URL.createObjectURL(blob);
+}
+
+export function formatPercentageRatio(total_value: number, upper_limit: number): string {
+  let calculatedPercent = 0;
+
+  // Prevent division by zero error if the upper_limit is 0 or less.
+  if (upper_limit > 0) {
+    // Calculate the percentage and round it to the nearest whole number.
+    calculatedPercent = Math.round((total_value / upper_limit) * 100);
+  }
+
+  // Construct the final string.
+  return `${calculatedPercent}% / 100%`;
 }

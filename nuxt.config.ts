@@ -7,6 +7,8 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/icon',
     'nuxt-lodash',
+    '@element-plus/nuxt',
+    '@nuxtjs/i18n',
   ],
   css: ['~/assets/css/main.css'],
   ssr: false,
@@ -16,6 +18,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       appTitle: '',
+      apiUrl: '',
+      clientVersion: '',
     },
   },
   routeRules: {

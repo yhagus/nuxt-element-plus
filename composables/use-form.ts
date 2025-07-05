@@ -17,23 +17,29 @@ export interface FormOperations<DefaultResponseType = any> {
     url: NitroFetchRequest,
     options?: NitroFetchOptions<NitroFetchRequest>
   ) => Promise<APIResponseType>;
+  put: <APIResponseType = DefaultResponseType>(
+    url: NitroFetchRequest,
+    options?: NitroFetchOptions<NitroFetchRequest>
+  ) => Promise<APIResponseType>;
   delete: <APIResponseType = DefaultResponseType>( // Changed from 'remove' to 'delete' based on usage
     url: NitroFetchRequest,
     options?: NitroFetchOptions<NitroFetchRequest>
   ) => Promise<APIResponseType>;
   processing: boolean;
-  errors: Record<string, string[]>;
+  errors: any;
   response: Record<string, any> | null;
 }
 
 export default function useForm<TData extends object, DefaultResponseType = any>(
   initialData: TData,
 ): TData & FormOperations<DefaultResponseType> {
+  const config = useRuntimeConfig();
+  const baseUrl = config.public.apiUrl;
   const form = reactive({
     ...initialData,
 
     response: null as DefaultResponseType | any | null,
-    errors: {} as Record<string, string[]>,
+    errors: {} as any,
     processing: false,
 
     submit: async <APIResponseType = DefaultResponseType>(
@@ -54,6 +60,7 @@ export default function useForm<TData extends object, DefaultResponseType = any>
         'response',
         'post',
         'patch',
+        'put',
         'delete',
         'submit',
         'rules',
@@ -113,6 +120,8 @@ export default function useForm<TData extends object, DefaultResponseType = any>
       const fetchOptions: NitroFetchOptions<NitroFetchRequest> = {
         ...options,
         method,
+        credentials: 'include',
+        baseURL: baseUrl,
         body: requestBody,
         onRequestError() {
           form.processing = false;
@@ -135,7 +144,7 @@ export default function useForm<TData extends object, DefaultResponseType = any>
         },
       };
 
-      return (useNuxtApp().$api as typeof $fetch)<APIResponseType>(url, fetchOptions);
+      return $fetch<APIResponseType>(url, fetchOptions);
     },
 
     post: <APIResponseType = DefaultResponseType>(
@@ -150,6 +159,13 @@ export default function useForm<TData extends object, DefaultResponseType = any>
       options?: NitroFetchOptions<NitroFetchRequest>,
     ) => {
       return form.submit<APIResponseType>('PATCH', url, options);
+    },
+
+    put: <APIResponseType = DefaultResponseType>(
+      url: NitroFetchRequest,
+      options?: NitroFetchOptions<NitroFetchRequest>,
+    ) => {
+      return form.submit<APIResponseType>('PUT', url, options);
     },
 
     delete: <APIResponseType = DefaultResponseType>(
