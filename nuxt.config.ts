@@ -6,7 +6,6 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
     '@nuxt/icon',
-    'nuxt-lodash',
     '@element-plus/nuxt',
     '@nuxtjs/i18n',
   ],
@@ -33,10 +32,7 @@ export default defineNuxtConfig({
       preprocessorMaxWorkers: true, // number of CPUs minus 1
     },
   },
-  lodash: {
-    prefix: '_',
-    prefixSkip: ['string'],
-    upperAfterPrefix: false,
-    exclude: ['map'],
+  i18n: {
+    defaultLocale: 'en',
   },
 });
