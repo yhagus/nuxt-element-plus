@@ -11,6 +11,9 @@ export default defineNuxtConfig({
   ],
   css: ['~/assets/css/main.css'],
   ssr: false,
+  dir: {
+    app: 'app',
+  },
   imports: {
     dirs: ['api', 'constants'],
   },
@@ -19,6 +22,7 @@ export default defineNuxtConfig({
       appTitle: '',
       apiUrl: '',
       clientVersion: '',
+      sentryDsnKey: '',
     },
   },
   routeRules: {

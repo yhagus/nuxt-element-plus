@@ -19,6 +19,7 @@
     "@element-plus/nuxt": "1.1.4",
     "@nuxt/icon": "1.15.0",
     "@nuxtjs/i18n": "10.0.2",
+    "@sentry/nuxt": "9.40.0",
     "@tailwindcss/vite": "4.1.11",
     "element-plus": "2.10.4",
     "lodash": "4.17.21",
