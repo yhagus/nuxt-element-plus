@@ -22,26 +22,26 @@ To begin developing with this Nuxt 4 project, you'll typically start by removing
 
 Here are some essential resources to help you build and expand your Nuxt project:
 
-* **Documentation:** We highly recommend exploring the [Nuxt documentation](https://nuxt.com/docs) to deepen your understanding of the framework and its capabilities.
+- **Documentation:** We highly recommend exploring the [Nuxt documentation](https://nuxt.com/docs) to deepen your understanding of the framework and its capabilities.
 
-* **Modules:** Discover a wide range of [Nuxt modules](https://nuxt.com/modules) that can supercharge your project with pre-built functionalities.
+- **Modules:** Discover a wide range of [Nuxt modules](https://nuxt.com/modules) that can supercharge your project with pre-built functionalities.
 
-* **Examples:** Get inspired by various [Nuxt examples](https://nuxt.com/docs/examples) demonstrating different ways to use Nuxt features.
+- **Examples:** Get inspired by various [Nuxt examples](https://nuxt.com/docs/examples) demonstrating different ways to use Nuxt features.
 
-* **Deployment:** Learn how to [deploy your Nuxt project](https://nuxt.com/deploy) on various hosting providers.
+- **Deployment:** Learn how to [deploy your Nuxt project](https://nuxt.com/deploy) on various hosting providers.
 
 ## Community
 
 Join the vibrant Nuxt community to get support, share ideas, and stay updated:
 
-* **GitHub:** [Nuxt GitHub Repository](https://go.nuxt.com/github)
+- **GitHub:** [Nuxt GitHub Repository](https://go.nuxt.com/github)
 
-* **Discord:** [Nuxt Discord Server](https://go.nuxt.com/discord)
+- **Discord:** [Nuxt Discord Server](https://go.nuxt.com/discord)
 
-* **X (formerly Twitter):** [Nuxt on X](https://go.nuxt.com/x)
+- **X (formerly Twitter):** [Nuxt on X](https://go.nuxt.com/x)
 
-* **Bluesky:** [Nuxt Bluesky](https://go.nuxt.com/bluesky)
+- **Bluesky:** [Nuxt Bluesky](https://go.nuxt.com/bluesky)
 
-* **LinkedIn:** [Nuxt LinkedIn](https://go.nuxt.com/linkedin)
+- **LinkedIn:** [Nuxt LinkedIn](https://go.nuxt.com/linkedin)
 
 Happy coding!

@@ -8,8 +8,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Adjust the paths to match your folder structure
-const modulesDir = path.join(__dirname, 'api', 'modules');
-const indexFile = path.join(__dirname, 'api', 'index.ts');
+const modulesDir = path.join(__dirname, 'app', 'api', 'modules');
+const indexFile = path.join(__dirname, 'app', 'api', 'index.ts');
 
 // Function to convert kebab-case to camelCase
 function toCamelCase(name) {

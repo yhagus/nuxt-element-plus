@@ -40,4 +40,10 @@ export default antfu(
       markdown: 'prettier',
     },
   },
+  {
+    files: ['console/**/*.mjs'],
+    rules: {
+      'no-console': 'off',
+    },
+  },
 );
