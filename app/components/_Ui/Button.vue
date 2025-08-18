@@ -76,7 +76,7 @@ const cssVars = computed(() => ({
 
 <style lang="scss">
 // Enhanced hover effects for buttons
-.el-button+.el-button {
+.el-button + .el-button {
   margin-left: 0;
 }
 .el-button {
