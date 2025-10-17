@@ -24,7 +24,7 @@ export default defineNuxtConfig({
     },
   ],
   imports: {
-    dirs: ['api', 'constants'],
+    dirs: ['api', 'constants', 'states'],
   },
   runtimeConfig: {
     public: {
