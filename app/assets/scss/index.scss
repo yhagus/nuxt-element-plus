@@ -1,0 +1,17 @@
+* {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+#__nuxt {
+  height: 100%;
+}
+body {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  height: 100%;
+}
+html {
+  font-size: 14px; /* Default font size */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { user } = useAuth();
+const { user } = useAuthStore();
 
 // Two-factor authentication state
 const twoFactorEnabled = ref(false);

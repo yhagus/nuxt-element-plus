@@ -6,13 +6,15 @@ const { resolve } = createResolver(import.meta.url);
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-05-15',
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   modules: [
-    '@nuxt/icon',
     '@nuxtjs/i18n',
-    '@element-plus/nuxt',
+    '@ciwergrp/nuxid',
   ],
-  css: ['~/assets/css/main.css'],
+  css: [
+    '~/assets/css/index.css',
+    '~/assets/scss/index.scss',
+  ],
   ssr: false,
   components: [
     {
@@ -29,10 +31,10 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       appTitle: 'NUXT 4',
-      apiUrl: '',
       clientVersion: '',
       sentryDsnKey: '',
     },
+    apiUrl: '',
   },
   routeRules: {
     '/authenticated/**': {
@@ -54,5 +56,9 @@ export default defineNuxtConfig({
     defaultLocale: 'en',
     detectBrowserLanguage: false,
   },
-  elementPlus: { /** Options */ },
+  nuxid: {
+    elementPlus: {
+      enabled: true,
+    },
+  },
 });

@@ -358,35 +358,35 @@ const exportOptions = ref([
             <div class="flex flex-wrap gap-4">
               <UiButton
                 variant="primary"
-                primary-color="#6366f1"
+                color="#6366f1"
                 border-radius="8px"
               >
                 Indigo Brand
               </UiButton>
               <UiButton
                 variant="success"
-                success-color="#10b981"
+                color="#10b981"
                 border-radius="12px"
               >
                 Emerald Success
               </UiButton>
               <UiButton
                 variant="warning"
-                warning-color="#f59e0b"
+                color="#f59e0b"
                 border-radius="6px"
               >
                 Amber Warning
               </UiButton>
               <UiButton
                 variant="danger"
-                danger-color="#ef4444"
+                color="#ef4444"
                 border-radius="16px"
               >
                 Red Danger
               </UiButton>
               <UiButton
                 variant="info"
-                info-color="#8b5cf6"
+                color="#8b5cf6"
                 border-radius="20px"
               >
                 Purple Info
@@ -402,7 +402,7 @@ const exportOptions = ref([
             <div class="flex flex-wrap gap-4">
               <UiButton
                 variant="primary"
-                primary-color="#ff6b6b"
+                color="#ff6b6b"
                 border-radius="25px"
                 round
               >
@@ -410,21 +410,21 @@ const exportOptions = ref([
               </UiButton>
               <UiButton
                 variant="success"
-                success-color="#4ecdc4"
+                color="#4ecdc4"
                 border-radius="4px"
               >
                 Teal Fresh
               </UiButton>
               <UiButton
                 variant="warning"
-                warning-color="#ffa726"
+                color="#ffa726"
                 border-radius="12px"
               >
                 Orange Warm
               </UiButton>
               <UiButton
                 variant="info"
-                info-color="#42a5f5"
+                color="#42a5f5"
                 border-radius="8px"
               >
                 Sky Blue
@@ -440,22 +440,21 @@ const exportOptions = ref([
             <div class="flex flex-wrap gap-4">
               <UiButton
                 variant="primary"
-                primary-color="#1f2937"
-                text-color="#ffffff"
+                color="#1f2937"
                 border-radius="6px"
               >
                 Dark Slate
               </UiButton>
               <UiButton
                 variant="success"
-                success-color="#374151"
+                color="#374151"
                 border-radius="8px"
               >
                 Dark Gray
               </UiButton>
               <UiButton
                 variant="danger"
-                danger-color="#7c2d12"
+                color="#7c2d12"
                 border-radius="10px"
               >
                 Dark Orange
@@ -471,7 +470,7 @@ const exportOptions = ref([
             <div class="flex flex-wrap items-center gap-4">
               <UiButton
                 variant="primary"
-                primary-color="#8b5cf6"
+                color="#8b5cf6"
                 border-radius="4px"
                 size="small"
               >
@@ -479,7 +478,7 @@ const exportOptions = ref([
               </UiButton>
               <UiButton
                 variant="primary"
-                primary-color="#8b5cf6"
+                color="#8b5cf6"
                 border-radius="6px"
                 size="default"
               >
@@ -487,7 +486,7 @@ const exportOptions = ref([
               </UiButton>
               <UiButton
                 variant="primary"
-                primary-color="#8b5cf6"
+                color="#8b5cf6"
                 border-radius="8px"
                 size="large"
               >
@@ -504,7 +503,7 @@ const exportOptions = ref([
             <div class="flex flex-wrap items-center gap-4">
               <UiButton
                 variant="primary"
-                primary-color="#ec4899"
+                color="#ec4899"
                 border-radius="25px"
                 round
               >
@@ -512,7 +511,7 @@ const exportOptions = ref([
               </UiButton>
               <UiButton
                 variant="success"
-                success-color="#059669"
+                color="#059669"
                 circle
                 title="Circle Button"
               >
@@ -520,14 +519,14 @@ const exportOptions = ref([
               </UiButton>
               <UiButton
                 variant="warning"
-                warning-color="#d97706"
+                color="#d97706"
                 border-radius="2px"
               >
                 Sharp Edges
               </UiButton>
               <UiButton
                 variant="info"
-                info-color="#0284c7"
+                color="#0284c7"
                 border-radius="16px"
                 text
               >
@@ -544,7 +543,8 @@ const exportOptions = ref([
             <div class="flex flex-wrap gap-4">
               <UiButton
                 variant="primary"
-                primary-color="#7c3aed"
+                color="#7c3aed"
+                :loading="true"
                 border-radius="8px"
                 @click="() => useToast().success('Purple button clicked!')"
               >
@@ -552,7 +552,8 @@ const exportOptions = ref([
               </UiButton>
               <UiButton
                 variant="success"
-                success-color="#16a34a"
+                color="#16a34a"
+                :loading="true"
                 border-radius="12px"
                 @click="() => useNotification().success('Success!', 'Green themed button works perfectly')"
               >
@@ -560,7 +561,7 @@ const exportOptions = ref([
               </UiButton>
               <UiButton
                 variant="warning"
-                warning-color="#ea580c"
+                color="#ea580c"
                 border-radius="6px"
                 loading
               >
@@ -568,7 +569,7 @@ const exportOptions = ref([
               </UiButton>
               <UiButton
                 variant="danger"
-                danger-color="#dc2626"
+                color="#dc2626"
                 border-radius="10px"
                 disabled
               >

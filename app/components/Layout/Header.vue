@@ -31,7 +31,7 @@ const notificationOpen = ref(false);
 const profileDropdownOpen = ref(false);
 
 // User data
-const { user } = useAuth();
+const { user } = useAuthStore();
 const { title } = useTitle();
 
 // Computed styles

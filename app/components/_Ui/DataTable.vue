@@ -52,6 +52,7 @@ const props = withDefaults(defineProps<DataTableProps>(), {
 const emit = defineEmits<Emits>();
 const configColumnKey = `${props.tableKey}-columns-presets`;
 
+
 const { debounce, isEmpty } = useLodash();
 const { columns, updateConfig } = useTableColumnConfig(configColumnKey);
 

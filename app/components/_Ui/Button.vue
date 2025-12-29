@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 interface Props {
   disabled?: boolean;
   loading?: boolean;
@@ -7,67 +9,43 @@ interface Props {
   circle?: boolean;
   bg?: boolean;
   size?: 'large' | 'default' | 'small';
-  variant?: 'default' | 'primary' | 'success' | 'warning' | 'danger' | 'info' | '' | 'text';
+  variant?: 'default' | 'primary' | 'success' | 'secondary' | 'warning' | 'danger' | 'info' | '' | 'text';
   type?: 'button' | 'submit' | 'reset';
+  color?: string;
   onClick?: ((evt: MouseEvent) => any);
-  // Theme customization props
-  primaryColor?: string;
-  successColor?: string;
-  warningColor?: string;
-  dangerColor?: string;
-  infoColor?: string;
-  textColor?: string;
-  borderColor?: string;
-  hoverOpacity?: number;
-  borderRadius?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   variant: 'default',
   size: 'default',
   type: 'button',
-  // Default Element Plus theme colors
-  primaryColor: '#409eff',
-  successColor: '#67c23a',
-  warningColor: '#e6a23c',
-  dangerColor: '#f56c6c',
-  infoColor: '#909399',
-  textColor: '#606266',
-  borderColor: '#dcdfe6',
-  hoverOpacity: 0.8,
-  borderRadius: '4px',
 });
 
 defineEmits<{
   (e: 'click', evt: MouseEvent): void;
 }>();
+const colorPattern = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
+const rgbPattern = /^rgba?\(\s*(?:[01]?\d?\d|2[0-4]\d|25[0-5])\s*,\s*(?:[01]?\d?\d|2[0-4]\d|25[0-5])\s*,\s*(?:[01]?\d?\d|2[0-4]\d|25[0-5])(?:\s*,\s*(?:0|0?\.\d+|1))?\s*\)$/;
+const hasCustomColor = computed(() => Boolean(props.color && (colorPattern.test(props.color) || rgbPattern.test(props.color))));
+const colorStyle = computed(() => (hasCustomColor.value ? { '--ui-button-color': props.color } : undefined));
 
-// Compute CSS variables for theming using Element Plus naming convention
-const cssVars = computed(() => ({
-  '--el-color-primary': props.primaryColor,
-  '--el-color-success': props.successColor,
-  '--el-color-warning': props.warningColor,
-  '--el-color-danger': props.dangerColor,
-  '--el-color-info': props.infoColor,
-  '--el-text-color-primary': props.textColor,
-  '--el-border-color': props.borderColor,
-  '--el-border-radius-base': props.borderRadius,
-}));
 </script>
 
 <template>
   <ElButton
-    :type="variant"
-    :loading="loading"
-    :disabled="disabled"
-    :native-type="type"
+    class="ui-button"
+    :class="{ 'ui-button--custom-color': hasCustomColor }"
+    :style="colorStyle"
+    :type="props.variant"
+    :loading="props.loading"
+    :disabled="props.disabled"
+    :native-type="props.type"
     :on-click="onClick"
-    :size="size"
-    :bg="bg"
-    :circle="circle"
-    :round="round"
-    :text="text"
-    :style="cssVars"
+    :size="props.size"
+    :bg="props.bg"
+    :circle="props.circle"
+    :round="props.round"
+    :text="props.text"
     @click="evt => $emit('click', evt)"
   >
     <slot />
@@ -75,34 +53,23 @@ const cssVars = computed(() => ({
 </template>
 
 <style lang="scss">
-// Enhanced hover effects for buttons
-.el-button + .el-button {
-  margin-left: 0;
-}
-.el-button {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+.ui-button {
+  &.ui-button--custom-color {
+    --el-button-bg-color: var(--ui-button-color);
+    --el-button-border-color: var(--ui-button-color);
+    --el-button-hover-bg-color: color-mix(in srgb, var(--ui-button-color) 92%, #ffffff 8%);
+    --el-button-hover-border-color: color-mix(in srgb, var(--ui-button-color) 92%, #ffffff 8%);
+    --el-button-active-bg-color: color-mix(in srgb, var(--ui-button-color) 88%, #000000 12%);
+    --el-button-active-border-color: color-mix(in srgb, var(--ui-button-color) 88%, #000000 12%);
+    --el-button-text-color: #fff;
 
-  &:hover:not(:disabled):not(.is-loading) {
-    //transform: translateY(-1px);
-    //box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  }
-
-  &:active:not(:disabled):not(.is-loading) {
-    transform: translateY(0);
-    //box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-  }
-
-  &.is-disabled {
-    &:hover {
-      transform: none;
-      box-shadow: none;
-    }
-  }
-
-  &.is-loading {
-    &:hover {
-      transform: none;
-      box-shadow: none;
+    &.is-text,
+    &.el-button--text {
+      --el-button-bg-color: transparent;
+      --el-button-border-color: transparent;
+      --el-button-text-color: var(--ui-button-color);
+      --el-button-hover-text-color: color-mix(in srgb, var(--ui-button-color) 88%, #000000 12%);
+      --el-button-active-text-color: color-mix(in srgb, var(--ui-button-color) 82%, #000000 18%);
     }
   }
 }

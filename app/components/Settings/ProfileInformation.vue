@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { user } = useAuth();
+const { user } = useAuthStore();
 
 const form = useForm({
   name: user?.name || '',

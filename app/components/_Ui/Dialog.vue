@@ -19,8 +19,6 @@ const emit = defineEmits<{
   (e: 'close'): void;
 }>();
 
-const { session } = useRefresh();
-
 const dialogRef = ref();
 const value = ref<boolean>(props.modelValue ?? false);
 
@@ -55,11 +53,6 @@ watch(value, (newValue) => {
   else {
     emit('close');
   }
-});
-
-watch(session, () => {
-  value.value = false;
-  emit('close');
 });
 
 defineExpose({

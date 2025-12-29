@@ -1,5 +1,5 @@
 export function useRole() {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
 
   /**
    * Contoh untuk response data
