@@ -9,7 +9,7 @@ interface Emits {
   'update:modelValue': [row: any];
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
 defineEmits<Emits>();
 
 const drawerRef = ref();
@@ -26,7 +26,7 @@ defineExpose({
 </script>
 
 <template>
-  <ElDrawer ref="drawerRef" :model-value="modelValue" :title="title" :direction="direction" :size="size" @update:model-value="$emit('update:modelValue', $event)">
+  <ElDrawer ref="drawerRef" :model-value="props.modelValue" :title="props.title" :direction="props.direction" :size="props.size" @update:model-value="$emit('update:modelValue', $event)">
     <template v-if="$slots.title" #title>
       <slot name="title" />
     </template>
@@ -40,6 +40,6 @@ defineExpose({
   </ElDrawer>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 
 </style>

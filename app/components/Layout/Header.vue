@@ -98,7 +98,7 @@ function markAsRead(notificationId: string) {
         class="mobile-menu-btn flex lg:hidden me-2"
         @click="$emit('toggleSidebar')"
       >
-        <Icon name="lucide:menu" />
+        <NIcon name="lucide:menu" />
       </button>
 
       <h1 class="header__title">
@@ -116,7 +116,7 @@ function markAsRead(notificationId: string) {
           class="notification-btn"
           @click.stop="notificationOpen = !notificationOpen"
         >
-          <Icon name="lucide:bell" />
+          <NIcon name="lucide:bell" />
           <span
             v-if="unreadNotifications.length > 0"
             class="notification-badge"
@@ -145,7 +145,7 @@ function markAsRead(notificationId: string) {
               @click="markAsRead(notification.id)"
             >
               <div class="notification-icon">
-                <Icon
+                <NIcon
                   :name="getNotificationIcon(notification.type)"
                   :class="`notification-icon--${notification.type}`"
                 />
@@ -182,7 +182,7 @@ function markAsRead(notificationId: string) {
             class="profile-avatar"
           >
           <span class="profile-name hidden md:block">{{ user?.name || 'John Doe' }}</span>
-          <Icon name="lucide:chevron-down" class="profile-arrow" />
+          <NIcon name="lucide:chevron-down" class="profile-arrow" />
         </button>
 
         <!-- Profile Dropdown -->
@@ -205,12 +205,12 @@ function markAsRead(notificationId: string) {
 
           <div class="profile-menu">
             <NuxtLink to="/settings" class="profile-menu__item">
-              <Icon name="lucide:user" />
+              <NIcon name="lucide:user" />
               <span>Settings</span>
             </NuxtLink>
             <hr class="profile-menu__divider">
             <button class="profile-menu__item profile-menu__item--danger">
-              <Icon name="lucide:log-out" />
+              <NIcon name="lucide:log-out" />
               <span>Sign Out</span>
             </button>
           </div>

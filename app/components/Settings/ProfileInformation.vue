@@ -85,7 +85,7 @@ async function deleteAccount() {
               class="avatar-image"
             >
             <div class="avatar-overlay">
-              <Icon name="lucide:camera" />
+              <NIcon name="lucide:camera" />
             </div>
             <input
               type="file"
@@ -97,7 +97,7 @@ async function deleteAccount() {
 
           <div class="avatar-actions">
             <label class="avatar-button avatar-button--primary">
-              <Icon name="lucide:upload" />
+              <NIcon name="lucide:upload" />
               Upload new avatar
               <input
                 type="file"
@@ -112,7 +112,7 @@ async function deleteAccount() {
               variant="default"
               @click="removeAvatar"
             >
-              <Icon name="lucide:trash-2" />
+              <NIcon name="lucide:trash-2" />
               Remove
             </UiButton>
           </div>
@@ -155,7 +155,7 @@ async function deleteAccount() {
           variant="primary"
           :loading="form.processing"
         >
-          <Icon name="lucide:save" />
+          <NIcon name="lucide:save" />
           Save Changes
         </UiButton>
       </div>
@@ -185,7 +185,7 @@ async function deleteAccount() {
           variant="danger"
           @click="showDeleteConfirmation = true"
         >
-          <Icon name="lucide:trash-2" />
+          <NIcon name="lucide:trash-2" />
           Delete Account
         </UiButton>
       </div>
@@ -199,7 +199,7 @@ async function deleteAccount() {
     >
       <div class="delete-confirmation">
         <div class="delete-confirmation__icon">
-          <Icon name="lucide:alert-triangle" />
+          <NIcon name="lucide:alert-triangle" />
         </div>
 
         <div class="delete-confirmation__content">
@@ -234,7 +234,7 @@ async function deleteAccount() {
                 variant="danger"
                 :loading="deleteForm.processing"
               >
-                <Icon name="lucide:trash-2" />
+                <NIcon name="lucide:trash-2" />
                 Delete Account
               </UiButton>
             </div>

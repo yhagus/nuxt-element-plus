@@ -40,7 +40,7 @@ const colorStyle = computed(() => (hasCustomColor.value ? { '--ui-button-color':
     :loading="props.loading"
     :disabled="props.disabled"
     :native-type="props.type"
-    :on-click="onClick"
+    :on-click="props.onClick"
     :size="props.size"
     :bg="props.bg"
     :circle="props.circle"

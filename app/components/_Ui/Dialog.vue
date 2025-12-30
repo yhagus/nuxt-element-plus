@@ -67,18 +67,19 @@ defineExpose({
   <el-dialog
     ref="dialogRef"
     v-model="value"
-    :width="width ?? '45%'"
+    class="shared-dialog"
+    :width="props.width ?? '45%'"
     :show-close="false"
-    :align-center="alignCenter"
+    :align-center="props.alignCenter"
     :append-to-body="true"
     :destroy-on-close="true"
     modal-class="backdrop-blur-sm"
-    :header-class="headerType !== 'default' ? 'hidden' : ''"
+    :header-class="props.headerType !== 'default' ? 'hidden' : ''"
   >
     <template #header="{ close: handleClose }">
       <div class="flex items-center justify-between">
-        <div v-if="title" class="text-lg">
-          {{ title }}
+        <div v-if="props.title" class="text-lg">
+          {{ props.title }}
         </div>
         <SharedButtonIcon
           name="ic:round-close"
@@ -90,19 +91,19 @@ defineExpose({
       </div>
     </template>
     <div class="space-y-2" :class="{ 'pb-6': !$slots.footer }">
-      <div v-if="headerType === 'centered'" class="flex flex-col items-center">
+      <div v-if="props.headerType === 'centered'" class="flex flex-col items-center">
         <div
           class="mb-4 max-h-[92px] max-w-[92px] min-h-[92px] min-w-[92px] flex items-center justify-center rounded-full"
           :class="{
-            'bg-[#FEC2651F]/24': modalType === 'warning',
-            'bg-[#FF4D4F1F]/24': modalType === 'error',
+            'bg-[#FEC2651F]/24': props.modalType === 'warning',
+            'bg-[#FF4D4F1F]/24': props.modalType === 'error',
           }"
         >
           <svg
             class="h-10 w-10"
             :class="{
-              'text-[#FEC265]': modalType === 'warning',
-              'text-[#FF4D4F]': modalType === 'error',
+              'text-[#FEC265]': props.modalType === 'warning',
+              'text-[#FF4D4F]': props.modalType === 'error',
             }"
             fill="currentColor"
             viewBox="0 0 20 20"
@@ -115,8 +116,8 @@ defineExpose({
             />
           </svg>
         </div>
-        <span v-if="title" class="text-2xl text-black font-bold">
-          {{ title }}
+        <span v-if="props.title" class="text-2xl text-black font-bold">
+          {{ props.title }}
         </span>
       </div>
       <slot />
@@ -130,12 +131,18 @@ defineExpose({
   </el-dialog>
 </template>
 
-<style lang="postcss">
-.shared-dialog .el-dialog__header {
-  @apply py-4 px-6 bg-base-500 text-white;
-}
+<style scoped lang="scss">
+.shared-dialog {
+  --el-dialog-padding-primary: 0px;
 
-.shared-dialog .el-dialog__body {
-  @apply p-0;
+  :deep(.el-dialog__header) {
+    padding: 16px 24px;
+    background-color: var(--el-color-primary);
+    color: var(--el-color-white);
+  }
+
+  :deep(.el-dialog__body) {
+    padding: var(--el-dialog-padding-primary);
+  }
 }
 </style>

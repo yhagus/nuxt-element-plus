@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FormInstance, FormRules } from 'element-plus';
 
-const { model, rules } = defineProps<{
+const props = defineProps<{
   processing?: boolean;
   disableSubmit?: boolean;
   submitText?: string;
@@ -16,7 +16,7 @@ const { t } = useI18n();
 const formRef = ref<FormInstance>();
 
 async function submit(formEl?: FormInstance) {
-  if (formEl && rules) {
+  if (formEl && props.rules) {
     await formEl.validate((valid, fields) => {
       if (valid) {
         emit('submit');
@@ -34,7 +34,7 @@ async function submit(formEl?: FormInstance) {
 </script>
 
 <template>
-  <el-form ref="formRef" :model="model" :rules="rules" label-position="top" :status-icon="true" :validate-on-rule-change="false" @submit.prevent="submit(formRef)">
+  <el-form ref="formRef" :model="props.model" :rules="props.rules" label-position="top" :status-icon="true" :validate-on-rule-change="false" @submit.prevent="submit(formRef)">
     <slot />
   </el-form>
 </template>

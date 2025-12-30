@@ -98,7 +98,7 @@ const showConfirmPassword = ref(false);
               class="password-toggle"
               @click="showCurrentPassword = !showCurrentPassword"
             >
-              <Icon :name="showCurrentPassword ? 'lucide:eye-off' : 'lucide:eye'" />
+              <NIcon :name="showCurrentPassword ? 'lucide:eye-off' : 'lucide:eye'" />
             </button>
           </div>
         </UiFormItem>
@@ -132,7 +132,7 @@ const showConfirmPassword = ref(false);
                 class="password-toggle"
                 @click="showNewPassword = !showNewPassword"
               >
-                <Icon :name="showNewPassword ? 'lucide:eye-off' : 'lucide:eye'" />
+                <NIcon :name="showNewPassword ? 'lucide:eye-off' : 'lucide:eye'" />
               </button>
             </div>
 
@@ -174,7 +174,7 @@ const showConfirmPassword = ref(false);
                 class="password-toggle"
                 @click="showConfirmPassword = !showConfirmPassword"
               >
-                <Icon :name="showConfirmPassword ? 'lucide:eye-off' : 'lucide:eye'" />
+                <NIcon :name="showConfirmPassword ? 'lucide:eye-off' : 'lucide:eye'" />
               </button>
             </div>
 
@@ -184,7 +184,7 @@ const showConfirmPassword = ref(false);
               class="password-match"
               :class="{ 'password-match--error': !passwordsMatch }"
             >
-              <Icon :name="passwordsMatch ? 'lucide:check-circle' : 'lucide:x-circle'" />
+              <NIcon :name="passwordsMatch ? 'lucide:check-circle' : 'lucide:x-circle'" />
               <span>{{ passwordsMatch ? 'Passwords match' : 'Passwords do not match' }}</span>
             </div>
           </UiFormItem>
@@ -198,23 +198,23 @@ const showConfirmPassword = ref(false);
         </h4>
         <ul class="password-requirements__list">
           <li :class="{ 'requirement-met': passwordRequirements.length }">
-            <Icon :name="passwordRequirements.length ? 'lucide:check' : 'lucide:x'" />
+            <NIcon :name="passwordRequirements.length ? 'lucide:check' : 'lucide:x'" />
             At least 8 characters long
           </li>
           <li :class="{ 'requirement-met': passwordRequirements.lowercase }">
-            <Icon :name="passwordRequirements.lowercase ? 'lucide:check' : 'lucide:x'" />
+            <NIcon :name="passwordRequirements.lowercase ? 'lucide:check' : 'lucide:x'" />
             Contains lowercase letter (a-z)
           </li>
           <li :class="{ 'requirement-met': passwordRequirements.uppercase }">
-            <Icon :name="passwordRequirements.uppercase ? 'lucide:check' : 'lucide:x'" />
+            <NIcon :name="passwordRequirements.uppercase ? 'lucide:check' : 'lucide:x'" />
             Contains uppercase letter (A-Z)
           </li>
           <li :class="{ 'requirement-met': passwordRequirements.numbers }">
-            <Icon :name="passwordRequirements.numbers ? 'lucide:check' : 'lucide:x'" />
+            <NIcon :name="passwordRequirements.numbers ? 'lucide:check' : 'lucide:x'" />
             Contains number (0-9)
           </li>
           <li :class="{ 'requirement-met': passwordRequirements.symbols }">
-            <Icon :name="passwordRequirements.symbols ? 'lucide:check' : 'lucide:x'" />
+            <NIcon :name="passwordRequirements.symbols ? 'lucide:check' : 'lucide:x'" />
             Contains special character (!@#$%^&*)
           </li>
         </ul>
@@ -228,7 +228,7 @@ const showConfirmPassword = ref(false);
           :loading="form.processing"
           :disabled="!passwordsMatch || !form.current_password || !form.password || !form.password_confirmation"
         >
-          <Icon name="lucide:key" />
+          <NIcon name="lucide:key" />
           Update Password
         </UiButton>
       </div>
@@ -237,7 +237,7 @@ const showConfirmPassword = ref(false);
     <!-- Security Tips -->
     <div class="security-tips">
       <div class="security-tips__header">
-        <Icon name="lucide:shield-check" />
+        <NIcon name="lucide:shield-check" />
         <h3>Password Security Tips</h3>
       </div>
 

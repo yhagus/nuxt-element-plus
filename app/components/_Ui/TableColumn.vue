@@ -16,7 +16,17 @@ const props = defineProps<TableColumnProp>();
 </script>
 
 <template>
-  <el-table-column :label="props.label" :type="props.type" :prop="props.prop as TableProp" :width="width" :min-width="minWidth" :align="align" :header-align="headerAlign">
+  <el-table-column
+    class-name="ui-table-column"
+    label-class-name="ui-table-column__header"
+    :label="props.label"
+    :type="props.type"
+    :prop="props.prop as TableProp"
+    :width="props.width"
+    :min-width="props.minWidth"
+    :align="props.align"
+    :header-align="props.headerAlign"
+  >
     <template #default="scope">
       <div v-if="(typeof props.prop === 'function')">
         {{ props.prop(scope.row, scope.$index, scope.col) }}
@@ -26,6 +36,12 @@ const props = defineProps<TableColumnProp>();
   </el-table-column>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+:deep(.ui-table-column) {
+  color: var(--el-text-color-regular);
+}
 
+:deep(.ui-table-column__header) {
+  color: var(--el-text-color-primary);
+}
 </style>

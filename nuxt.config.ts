@@ -60,5 +60,11 @@ export default defineNuxtConfig({
     elementPlus: {
       enabled: true,
     },
+    icon: {
+      enabled: true,
+      config: {
+        componentName: 'NIcon',
+      },
+    },
   },
 });

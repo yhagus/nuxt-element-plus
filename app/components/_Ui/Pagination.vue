@@ -54,22 +54,22 @@ const cssVars = computed(() => ({
 <template>
   <div
     class="ui-pagination"
-    :class="`ui-pagination--${size}`"
+    :class="`ui-pagination--${props.size}`"
     :style="cssVars"
   >
     <el-pagination
       v-bind="$attrs"
-      :size="size"
-      :layout="layout"
-      :total="total"
-      :page-size="pageSize"
-      :page-sizes="pageSizes"
+      :size="props.size"
+      :layout="props.layout"
+      :total="props.total"
+      :page-size="props.pageSize"
+      :page-sizes="props.pageSizes"
       :pager-count="5"
-      :current-page="currentPage"
-      :default-page-size="defaultPageSize"
-      :default-current-page="defaultCurrentPage"
+      :current-page="props.currentPage"
+      :default-page-size="props.defaultPageSize"
+      :default-current-page="props.defaultCurrentPage"
       :background="false"
-      :hide-on-single-page="hideOnSinglePage"
+      :hide-on-single-page="props.hideOnSinglePage"
       @size-change="$emit('sizeChange', $event)"
       @current-change="$emit('currentChange', $event); $emit('pageChange', $event)"
     />

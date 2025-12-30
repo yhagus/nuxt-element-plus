@@ -43,6 +43,6 @@ onUnmounted(() => {
   </div>
 </template>
 
-<style scoped lang="postcss">
+<style scoped lang="scss">
 
 </style>

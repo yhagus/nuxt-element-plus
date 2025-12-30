@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps<{
+const props = defineProps<{
   label?: string;
   modelValue?: boolean;
 }>();
@@ -9,7 +9,7 @@ defineEmits<{
 </script>
 
 <template>
-  <ElCheckbox :label="label" :model-value="modelValue" @update:model-value="$emit('update:modelValue', $event)">
+  <ElCheckbox :label="props.label" :model-value="props.modelValue" @update:model-value="$emit('update:modelValue', $event)">
     <slot v-if="$slots.default" />
   </ElCheckbox>
 </template>

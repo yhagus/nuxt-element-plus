@@ -112,9 +112,9 @@ watch(() => route.path, () => {
               class="nav-link nav-link--expandable"
               @click="toggleMenu(item.id)"
             >
-              <Icon v-if="item.icon" :name="item.icon" class="nav-icon" />
+              <NIcon v-if="item.icon" :name="item.icon" class="nav-icon" />
               <span class="nav-text">{{ item.label }}</span>
-              <Icon
+              <NIcon
                 name="lucide:chevron-down"
                 class="nav-arrow"
                 :class="{ 'nav-arrow--expanded': isMenuExpanded(item.id) }"
@@ -154,7 +154,7 @@ watch(() => route.path, () => {
             :class="{ 'nav-link--active': isActiveRoute(item.route) }"
             @click="$emit('close')"
           >
-            <Icon v-if="item.icon" :name="item.icon" class="nav-icon" />
+            <NIcon v-if="item.icon" :name="item.icon" class="nav-icon" />
             <span class="nav-text">{{ item.label }}</span>
           </NuxtLink>
         </li>

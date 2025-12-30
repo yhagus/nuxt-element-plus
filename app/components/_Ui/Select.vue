@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { options } = defineProps<{
+const props = defineProps<{
   options: {
     label: string;
     value: string;
@@ -53,12 +53,12 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <el-select class="v2-select" :loading="loading" :remote="remote" :remote-method="remoteMethod" :clearable="clearable ?? true" :disabled="disabled" collapse-tags :max-collapse-tags="2" :multiple="multiple" :placeholder="placeholder" :filterable="filterable" :model-value="modelValue" @visible-change="visibleChange" @update:model-value="$emit('update:modelValue', $event)">
+  <el-select class="v2-select" :loading="props.loading" :remote="props.remote" :remote-method="props.remoteMethod" :clearable="props.clearable ?? true" :disabled="props.disabled" collapse-tags :max-collapse-tags="2" :multiple="props.multiple" :placeholder="props.placeholder" :filterable="props.filterable" :model-value="props.modelValue" @visible-change="visibleChange" @update:model-value="$emit('update:modelValue', $event)">
     <template #loading>
       <div class="flex justify-center py-2">
         <span ref="loadingText" class="loading text-sm tracking-wide">Loading</span>
       </div>
     </template>
-    <ElOption v-for="(option, index) in options" :key="index" :label="option.label" :value="option.value" />
+    <ElOption v-for="(option, index) in props.options" :key="index" :label="option.label" :value="option.value" />
   </el-select>
 </template>

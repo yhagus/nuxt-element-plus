@@ -100,6 +100,6 @@ const props = withDefaults(defineProps<LoadingStateProps>(), {
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 /* No specific styles needed outside of Tailwind utility classes */
 </style>

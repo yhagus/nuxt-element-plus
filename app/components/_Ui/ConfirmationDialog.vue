@@ -64,7 +64,7 @@ defineExpose({
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .confirmation-trigger-body {
   display: flex;
   align-items: center;

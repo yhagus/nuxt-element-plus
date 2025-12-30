@@ -132,7 +132,7 @@ function copySecretKey() {
     <!-- Status Card -->
     <div class="status-card" :class="{ 'status-card--enabled': twoFactorEnabled }">
       <div class="status-card__icon">
-        <Icon :name="twoFactorEnabled ? 'lucide:shield-check' : 'lucide:shield-off'" />
+        <NIcon :name="twoFactorEnabled ? 'lucide:shield-check' : 'lucide:shield-off'" />
       </div>
 
       <div class="status-card__content">
@@ -155,7 +155,7 @@ function copySecretKey() {
           variant="primary"
           @click="showingConfirmPassword = true"
         >
-          <Icon name="lucide:shield-plus" />
+          <NIcon name="lucide:shield-plus" />
           Enable 2FA
         </UiButton>
 
@@ -164,7 +164,7 @@ function copySecretKey() {
             variant="default"
             @click="showingRecoveryCodes = true"
           >
-            <Icon name="lucide:key" />
+            <NIcon name="lucide:key" />
             Show Recovery Codes
           </UiButton>
 
@@ -172,7 +172,7 @@ function copySecretKey() {
             variant="danger"
             @click="showingConfirmPassword = true"
           >
-            <Icon name="lucide:shield-minus" />
+            <NIcon name="lucide:shield-minus" />
             Disable 2FA
           </UiButton>
         </template>
@@ -195,15 +195,15 @@ function copySecretKey() {
             <p>Download and install one of these authenticator apps on your mobile device:</p>
             <div class="app-suggestions">
               <div class="app-suggestion">
-                <Icon name="lucide:smartphone" />
+                <NIcon name="lucide:smartphone" />
                 <span>Google Authenticator</span>
               </div>
               <div class="app-suggestion">
-                <Icon name="lucide:smartphone" />
+                <NIcon name="lucide:smartphone" />
                 <span>Microsoft Authenticator</span>
               </div>
               <div class="app-suggestion">
-                <Icon name="lucide:smartphone" />
+                <NIcon name="lucide:smartphone" />
                 <span>Authy</span>
               </div>
             </div>
@@ -286,7 +286,7 @@ function copySecretKey() {
         @submit="disableTwoFactorAuthentication"
       >
         <div class="disable-warning">
-          <Icon name="lucide:alert-triangle" />
+          <NIcon name="lucide:alert-triangle" />
           <p>Are you sure you want to disable two-factor authentication? This will make your account less secure.</p>
         </div>
 
@@ -333,7 +333,7 @@ function copySecretKey() {
         <div class="qr-code-container">
           <!-- In a real app, this would be an actual QR code image -->
           <div class="qr-code-placeholder">
-            <Icon name="lucide:qr-code" />
+            <NIcon name="lucide:qr-code" />
             <p>QR Code would appear here</p>
             <small>{{ qrCodeUrl }}</small>
           </div>
@@ -349,7 +349,7 @@ function copySecretKey() {
               size="small"
               @click="copySecretKey"
             >
-              <Icon name="lucide:copy" />
+              <NIcon name="lucide:copy" />
               Copy
             </UiButton>
           </div>
@@ -382,7 +382,7 @@ function copySecretKey() {
               variant="primary"
               :loading="confirmTwoFactorForm.processing"
             >
-              <Icon name="lucide:shield-check" />
+              <NIcon name="lucide:shield-check" />
               Enable 2FA
             </UiButton>
           </div>
@@ -398,7 +398,7 @@ function copySecretKey() {
     >
       <div class="recovery-codes">
         <div class="recovery-codes__warning">
-          <Icon name="lucide:alert-triangle" />
+          <NIcon name="lucide:alert-triangle" />
           <div>
             <h4>Save these recovery codes</h4>
             <p>
@@ -424,7 +424,7 @@ function copySecretKey() {
               variant="default"
               @click="copyRecoveryCodes"
             >
-              <Icon name="lucide:copy" />
+              <NIcon name="lucide:copy" />
               Copy Codes
             </UiButton>
 
@@ -432,7 +432,7 @@ function copySecretKey() {
               variant="default"
               @click="downloadRecoveryCodes"
             >
-              <Icon name="lucide:download" />
+              <NIcon name="lucide:download" />
               Download Codes
             </UiButton>
           </div>
@@ -460,7 +460,7 @@ function copySecretKey() {
               variant="warning"
               :loading="regenerateRecoveryCodesForm.processing"
             >
-              <Icon name="lucide:refresh-cw" />
+              <NIcon name="lucide:refresh-cw" />
               Regenerate Codes
             </UiButton>
           </UiForm>

@@ -187,7 +187,7 @@ setTitle(
   'test',
 );
 definePageMeta({
-  layout: 'authenticated',
+  layout: 'theme-shadcn-1',
 });
 </script>
 
@@ -215,7 +215,7 @@ definePageMeta({
             />
           </div>
           <UiButton variant="primary" @click="handleCreate">
-            <Icon name="lucide:plus" class="w-4 h-4 mr-2" />
+            <NIcon name="lucide:plus" class="w-4 h-4 mr-2" />
             Create User
           </UiButton>
         </div>
@@ -242,13 +242,13 @@ definePageMeta({
       <template #action="{ row }">
         <div class="flex items-center justify-center gap-2">
           <UiButton size="small" variant="info" @click="handleView(row)">
-            <Icon name="lucide:eye" class="w-4 h-4" />
+            <NIcon name="lucide:eye" class="w-4 h-4" />
           </UiButton>
           <UiButton size="small" variant="warning" @click="handleEdit(row)">
-            <Icon name="lucide:edit" class="w-4 h-4" />
+            <NIcon name="lucide:edit" class="w-4 h-4" />
           </UiButton>
           <UiButton size="small" variant="danger" @click="handleDelete(row)">
-            <Icon name="lucide:trash-2" class="w-4 h-4" />
+            <NIcon name="lucide:trash-2" class="w-4 h-4" />
           </UiButton>
         </div>
       </template>

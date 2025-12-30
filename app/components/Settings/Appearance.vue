@@ -163,7 +163,7 @@ function resetToDefaults() {
             @click="form.theme = theme.id; applyThemePreview()"
           >
             <div class="theme-option__preview">
-              <Icon :name="theme.icon" />
+              <NIcon :name="theme.icon" />
             </div>
             <div class="theme-option__content">
               <h4 class="theme-option__name">
@@ -206,7 +206,7 @@ function resetToDefaults() {
             :title="color.name"
             @click="form.primaryColor = color.color; applyThemePreview()"
           >
-            <Icon
+            <NIcon
               v-if="form.primaryColor === color.color"
               name="lucide:check"
               class="color-option__check"
@@ -315,7 +315,7 @@ function resetToDefaults() {
             variant="primary"
             :loading="form.processing"
           >
-            <Icon name="lucide:save" />
+            <NIcon name="lucide:save" />
             Save Changes
           </UiButton>
 
@@ -324,7 +324,7 @@ function resetToDefaults() {
             variant="default"
             @click="applyThemePreview"
           >
-            <Icon name="lucide:eye" />
+            <NIcon name="lucide:eye" />
             Preview
           </UiButton>
         </div>
@@ -334,7 +334,7 @@ function resetToDefaults() {
           variant="default"
           @click="resetToDefaults"
         >
-          <Icon name="lucide:rotate-ccw" />
+          <NIcon name="lucide:rotate-ccw" />
           Reset to Defaults
         </UiButton>
       </div>
@@ -343,7 +343,7 @@ function resetToDefaults() {
     <!-- Preview Card -->
     <div class="preview-card">
       <div class="preview-card__header">
-        <Icon name="lucide:monitor" />
+        <NIcon name="lucide:monitor" />
         <h3>Preview</h3>
       </div>
 

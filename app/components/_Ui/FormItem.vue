@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FormItemRule } from 'element-plus';
 
-defineProps<{
+const props = defineProps<{
   label?: string;
   required?: boolean;
   error?: string[];
@@ -14,7 +14,7 @@ defineProps<{
 </script>
 
 <template>
-  <el-form-item class="ui-form-item" :rules="rules" :class="{ 'el-form-item__label-italic': italic }" :for="prop" :prop="prop" :error="error?.[0]" :aria-label="required ? `${label} *` : label" :label="required ? `${label} *` : label">
+  <el-form-item class="ui-form-item" :rules="props.rules" :class="{ 'el-form-item__label-italic': props.italic }" :for="props.prop" :prop="props.prop" :error="props.error?.[0]" :aria-label="props.required ? `${props.label} *` : props.label" :label="props.required ? `${props.label} *` : props.label">
     <template v-if="$slots.label" #label>
       <slot name="label" />
     </template>
@@ -22,8 +22,8 @@ defineProps<{
   </el-form-item>
 </template>
 
-<style>
+<style scoped lang="scss">
 .ui-form-item {
-  --el-text-color-regular: #000;
+  --el-text-color-regular: var(--el-text-color-primary);
 }
 </style>

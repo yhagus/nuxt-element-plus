@@ -223,7 +223,7 @@ watch(columns, (loadedSavedColumns) => {
           </ElPopover>
 
           <!-- Filters Dropdown -->
-          <ElPopover v-if="filters && Object.keys(filters).length > 0" trigger="click" :width="300" :teleported="true">
+          <ElPopover v-if="props.filters && Object.keys(props.filters).length > 0" trigger="click" :width="300" :teleported="true">
             <template #reference>
               <UiButton variant="default" title="Filters">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -236,7 +236,7 @@ watch(columns, (loadedSavedColumns) => {
                 <div class="border-b border-gray-200 pb-2 font-medium text-gray-900">
                   Filters
                 </div>
-                <template v-for="(filterOptions, filterKey) in filters" :key="filterKey">
+                <template v-for="(filterOptions, filterKey) in props.filters" :key="filterKey">
                   <div class="flex flex-col gap-1">
                     <div class="font-medium text-gray-700 capitalize">
                       {{ filterKey.replace('_', ' ') }}
@@ -264,7 +264,7 @@ watch(columns, (loadedSavedColumns) => {
           <slot name="filters" />
 
           <!-- Export Dropdown -->
-          <ElPopover v-if="exportOptions && exportOptions.length > 0" trigger="click" :width="200" :teleported="true">
+          <ElPopover v-if="props.exportOptions && props.exportOptions.length > 0" trigger="click" :width="200" :teleported="true">
             <template #reference>
               <UiButton variant="default" title="Export Data">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -279,7 +279,7 @@ watch(columns, (loadedSavedColumns) => {
                 </div>
                 <div class="flex flex-col gap-1">
                   <button
-                    v-for="option in exportOptions"
+                    v-for="option in props.exportOptions"
                     :key="option.value"
                     type="button"
                     class="flex items-center gap-3 rounded px-3 py-2 text-left hover:bg-gray-100"
@@ -344,12 +344,12 @@ watch(columns, (loadedSavedColumns) => {
     <div class="overflow-x-auto rounded-lg border border-gray-200 bg-white">
       <UiTable
         size="small"
-        :data="data"
-        :loading="loading"
+        :data="props.data"
+        :loading="props.loading"
         :border="true"
-        :stripe="stripe"
-        :row-class-name="rowClassName"
-        :span-method="spanMethod"
+        :stripe="props.stripe"
+        :row-class-name="props.rowClassName"
+        :span-method="props.spanMethod"
         @selection-change="$emit('selectionChange', $event)"
       >
         <template v-for="(column) in visibleColumns" :key="column.label">
@@ -363,18 +363,18 @@ watch(columns, (loadedSavedColumns) => {
     </div>
 
     <!-- Pagination -->
-    <div v-if="meta" class="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div v-if="props.meta" class="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <!-- Left: Page Size Selector -->
       <div class="flex items-center gap-2">
         <span class="text-sm text-gray-700">Rows per page:</span>
         <UiPagination
-          :limit="meta.limit"
-          :current-page="meta.currentPage"
-          :total="meta.total ?? 0"
+          :limit="props.meta.limit"
+          :current-page="props.meta.currentPage"
+          :total="props.meta.total ?? 0"
           :page-sizes="[10, 25, 50, 100]"
           layout="sizes"
-          :default-page-size="meta.limit ?? 25"
-          :default-current-page="meta.currentPage ?? 1"
+          :default-page-size="props.meta.limit ?? 25"
+          :default-current-page="props.meta.currentPage ?? 1"
           @size-change="(pageSize: number) => emit('onPageChange', { limit: pageSize })"
         />
       </div>
@@ -382,15 +382,15 @@ watch(columns, (loadedSavedColumns) => {
       <!-- Right: Pager Navigation -->
       <div class="flex items-center gap-2">
         <span class="text-sm text-gray-700">
-          {{ ((meta.currentPage - 1) * meta.limit) + 1 }}-{{ Math.min(meta.currentPage * meta.limit, meta.total ?? 0) }} of {{ meta.total ?? 0 }}
+          {{ ((props.meta.currentPage - 1) * props.meta.limit) + 1 }}-{{ Math.min(props.meta.currentPage * props.meta.limit, props.meta.total ?? 0) }} of {{ props.meta.total ?? 0 }}
         </span>
         <UiPagination
-          :limit="meta.limit"
-          :current-page="meta.currentPage"
-          :total="meta.total ?? 0"
+          :limit="props.meta.limit"
+          :current-page="props.meta.currentPage"
+          :total="props.meta.total ?? 0"
           layout="prev, pager, next"
-          :default-page-size="meta.limit ?? 25"
-          :default-current-page="meta.currentPage ?? 1"
+          :default-page-size="props.meta.limit ?? 25"
+          :default-current-page="props.meta.currentPage ?? 1"
           @current-change="(currentPage: number) => emit('onPageChange', { page: currentPage })"
         />
       </div>

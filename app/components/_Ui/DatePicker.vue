@@ -10,7 +10,7 @@ interface Props {
   valueFormat?: string;
   defaultValue?: Date;
 }
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   size: 'small',
 });
 defineEmits<{
@@ -20,14 +20,14 @@ defineEmits<{
 
 <template>
   <ElDatePicker
-    :type="type"
-    :placeholder="placeholder"
-    :format="format ?? 'DD/MM/YYYY'"
-    :default-value="defaultValue"
-    :disabled-date="disabledDate"
-    :value-format="valueFormat ?? 'YYYY-MM-DD'"
+    :type="props.type"
+    :placeholder="props.placeholder"
+    :format="props.format ?? 'DD/MM/YYYY'"
+    :default-value="props.defaultValue"
+    :disabled-date="props.disabledDate"
+    :value-format="props.valueFormat ?? 'YYYY-MM-DD'"
     auto-complete="off"
-    :model-value="modelValue"
+    :model-value="props.modelValue"
     @change="$emit('update:modelValue', $event)"
     @update:model-value="$emit('update:modelValue', $event)"
   />

@@ -24,7 +24,7 @@ const marginRight = computed(() => props.centered ? 'auto' : '0');
 
 <template>
   <el-tabs v-model="activeName" class="uitab" @tab-click="(pane, ev) => $emit('tabClick', pane)">
-    <ElTabPane v-for="(item) in tabs" :key="item.name" :label="item.label" :name="item.name" :lazy="item.lazy">
+    <ElTabPane v-for="(item) in props.tabs" :key="item.name" :label="item.label" :name="item.name" :lazy="item.lazy">
       <template v-if="activeName === item.name" #default="emit">
         <slot :name="item.name" :emit="emit" />
       </template>

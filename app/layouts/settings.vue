@@ -81,7 +81,7 @@ const activeMenuItem = computed(() => {
                   :class="{ 'settings-nav__link--active': activeMenuItem?.id === item.id }"
                 >
                   <div class="settings-nav__icon">
-                    <Icon :name="item.icon" />
+                    <NIcon :name="item.icon" />
                   </div>
                   <div class="settings-nav__content">
                     <span class="settings-nav__label">{{ item.label }}</span>
@@ -99,7 +99,7 @@ const activeMenuItem = computed(() => {
             <!-- Active Section Header -->
             <div class="settings-section-header">
               <div class="settings-section-icon">
-                <Icon :name="activeMenuItem?.icon || 'lucide:settings'" />
+                <NIcon :name="activeMenuItem?.icon || 'lucide:settings'" />
               </div>
               <div class="settings-section-info">
                 <h2 class="settings-section-title">
