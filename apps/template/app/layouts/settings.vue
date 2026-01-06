@@ -50,7 +50,7 @@ const activeMenuItem = computed(() => {
 </script>
 
 <template>
-  <NuxtLayout name="authenticated">
+  <NuxtLayout name="classic-1">
     <div class="settings-layout">
       <!-- Settings Header -->
       <div class="settings-header">

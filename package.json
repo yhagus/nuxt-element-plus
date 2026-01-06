@@ -1,45 +1,32 @@
 {
-  "name": "nuxt-app",
-  "type": "module",
+  "name": "core",
   "private": true,
-  "engines": {
-    "node": ">=22"
-  },
   "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
-    "lint": "eslint .",
-    "lint:fix": "eslint --fix .",
-    "test": "vitest",
-    "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage",
-    "test:ui": "vitest --ui",
-    "test:watch": "vitest --watch"
+    "dev:template": "pnpm --filter @apps/template dev",
+    "dev:admin": "pnpm --filter @apps/admin dev",
+    "dev": "pnpm -r dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck"
   },
   "dependencies": {
-    "@ciwergrp/nuxid": "^1.0.6",
+    "@ciwergrp/nuxid": "^1.1.0",
     "@nuxtjs/i18n": "10.2.1",
     "@tailwindcss/vite": "4.1.18",
-    "nuxt": "4.2.1",
     "sass": "1.97.1",
-    "tailwindcss": "4.1.18",
-    "vue": "3.5.26",
-    "vue-router": "4.6.4"
+    "tailwindcss": "4.1.18"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^6.7.3",
+    "@types/node": "^22.1.0",
+    "eslint": "^9.39.2",
+    "eslint-plugin-format": "^1.1.0",
+    "typescript": "^5.9.3",
     "@nuxt/devtools": "^3.1.1",
-    "@types/node": "^24.1.0",
     "@vitest/coverage-v8": "^4.0.16",
     "@vitest/ui": "^4.0.16",
     "@vue/language-server": "^3.2.1",
     "@vue/test-utils": "^2.4.6",
-    "eslint": "^9.39.2",
-    "eslint-plugin-format": "^1.1.0",
-    "typescript": "^5.9.3",
     "vitest": "^4.0.16"
   }
 }
