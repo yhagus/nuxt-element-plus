@@ -1,5 +1,14 @@
 # Repository Guidelines
 
+## MAIN RULES, MUST READ BEFORE GOING TO THE NEXT RULE
+- This project is a monorepo at it's core.
+- We put styling and components theming (base, non-page component) in layers/ui.
+- We put composables in layers/base.
+- The sub apps structure is being put in `apps`, for example `apps/admin` or `apps/template`.
+- Creating component of a page is fine inside the apps. For example if admin have `dashboard.vue`, then it's okay to put, for example, a dashboard component like `RecentUserActivity` in that apps.
+- When prompting, if I forgot to mention which `apps` is the context, you may ask me. But if I said things shortly like "in admin..." it most likely mean in `apps/admin`.
+- The next rule will only explain about what's happening each app, not explaining anything outside of folder `apps/<app>`.
+
 ## Project Structure & Module Organization
 - `app/` is the primary Nuxt application code (components, pages, composables, plugins, middleware, utils, types).
 - `server/` holds server-side routes or handlers if added later.
@@ -28,7 +37,7 @@ The application expects a REST API backend with:
 - Bearer token authentication
 - Standardized error response format with `errors` field
 - Token refresh endpoint at `/v1/auth/refresh`
-- Base URL configured via server route `/servers`
+- Base API URL configured via server route `/servers`
 
 ## Core Development Patterns (MEMORIZE FOR FUTURE SESSIONS)
 
@@ -41,7 +50,7 @@ The application expects a REST API backend with:
 
 **Form Handling (CRITICAL)**:
 
-- **ALWAYS wrap forms with `useForm()`** - Never manual form state
+- **ALWAYS wrap forms with `useForm()`** - Never use manual form state or reactive()
 - Auto-converts to FormData when files detected: `const form = useForm({ name: '', avatar: null })`
 - Built-in states: `form.processing` (loading), `form.errors` (validation errors)
 - Usage: `<UiForm v-model="form" @submit="submitHandler">`
