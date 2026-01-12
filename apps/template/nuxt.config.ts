@@ -10,12 +10,12 @@ export default defineNuxtConfig({
     public: {
       appTitle: 'NUXT 4',
       clientVersion: '',
-      sentry: {
-        dsnKey: '',
-        enabled: false,
-      },
     },
     apiUrl: '',
+    sentry: {
+      dsnKey: '',
+      enabled: false,
+    },
   },
   routeRules: {
     '/authenticated/**': {

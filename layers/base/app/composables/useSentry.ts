@@ -10,11 +10,16 @@ interface SentryPayload {
   message: any;
 }
 
-export function useSentry() {
-  const config = useRuntimeConfig();
+export async function useSentry() {
+  const { data: sentryConfig } = await useFetch<{ dsnKey: string; enabled: boolean }>('/api/logger', {
+    default: () => ({
+      dsnKey: '',
+      enabled: false,
+    }),
+  });
 
   const isSentryEnabled = computed(() => {
-    return config.public.sentry.enabled === true || config.public.sentry.enabled === 'true';
+    return sentryConfig.value?.enabled;
   });
 
   const captureMessage = (message: string, context?: CaptureContext | SeverityLevel) => {
@@ -24,7 +29,7 @@ export function useSentry() {
   };
 
   const createPayload = (message: any, endpoint?: string): string => {
-    const userInfo = useState<User>('USER_SESSION');
+    const userInfo = useState<{ id: string; email: string }>('USER_SESSION');
 
     const payload: SentryPayload = {
       userInfo: {
@@ -69,7 +74,7 @@ export function useSentry() {
     }
   };
 
-  const setUser = (user: Partial<User>) => {
+  const setUser = (user: Partial<{ id: string; email: string }>) => {
     if (isSentryEnabled.value) {
       Sentry.setUser(user);
     }
