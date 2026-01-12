@@ -14,7 +14,7 @@ export function useRole() {
    *    }
    * ]
    */
-  const getPermissions = () => {
+  const getPermissions = (): any[] => {
     return user.value?.role.permissions ?? [];
   };
   const hasPermissions = (key: string, type: ('manage' | 'read' | 'create' | 'update' | 'delete')[]) => {

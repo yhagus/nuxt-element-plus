@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineNuxtConfig({
@@ -8,7 +9,7 @@ export default defineNuxtConfig({
     '@ciwergrp/nuxid',
   ],
   imports: {
-    dirs: ['api', 'constants'],
+    dirs: ['constants'],
   },
   vite: {
     plugins: [
@@ -18,10 +19,6 @@ export default defineNuxtConfig({
       preprocessorMaxWorkers: true, // number of CPUs minus 1
     },
   },
-  i18n: {
-    defaultLocale: 'en',
-    detectBrowserLanguage: false,
-  },
   nuxid: {
     elementPlus: {
       enabled: true,
@@ -30,7 +27,26 @@ export default defineNuxtConfig({
       enabled: true,
       config: {
         componentName: 'NIcon',
+        size: '1.25em',
+        class: 'align-middle inline-block text-current',
+        mode: 'svg',
+        provider: 'local',
       },
     },
+  },
+  i18n: {
+    defaultLocale: 'id',
+    strategy: 'no_prefix',
+    detectBrowserLanguage: false,
+    locales: [
+      {
+        name: 'id',
+        code: 'id',
+        file: 'id.json',
+      },
+    ],
+  },
+  alias: {
+    '#dto': fileURLToPath(new URL('./shared/types/dto', import.meta.url)),
   },
 });

@@ -22,7 +22,8 @@ export function useAuthStore() {
   }
 
   async function fetchUserRaw() {
-    user.value = await api.auth.authorize();
+    const response = await api.auth.authorize();
+    user.value = response.data;
   }
 
   const loading = ref(false);

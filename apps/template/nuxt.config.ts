@@ -10,7 +10,10 @@ export default defineNuxtConfig({
     public: {
       appTitle: 'NUXT 4',
       clientVersion: '',
-      sentryDsnKey: '',
+      sentry: {
+        dsnKey: '',
+        enabled: false,
+      },
     },
     apiUrl: '',
   },

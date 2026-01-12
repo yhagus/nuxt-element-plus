@@ -28,7 +28,7 @@ export default defineNuxtPlugin(async () => {
       const optionsRef = options as object;
 
       if (response.status === 401 && auth.refresh.value && !retriedOptions.has(optionsRef)) {
-        const refreshResponse = await $fetch<{ access_token: string; refresh_token: string }>(`/v1/auth/refresh`, {
+        const refreshResponse = await $fetch<{ access_token: string; refresh_token: string }>(`/auth/refresh`, {
           baseURL: defaultApiUrl,
           method: 'POST',
           headers: {

@@ -22,5 +22,5 @@ export default defineNuxtRouteMiddleware(async (to) => {
     }
   }
 
-  return navigateTo(HOME_PATH, {replace: true});
+  return navigateTo(HOME_PATH, { replace: true });
 });
