@@ -1,5 +1,4 @@
 import { fileURLToPath } from 'node:url';
-import tailwindcss from '@tailwindcss/vite';
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-05-15',
@@ -10,14 +9,6 @@ export default defineNuxtConfig({
   ],
   imports: {
     dirs: ['constants'],
-  },
-  vite: {
-    plugins: [
-      tailwindcss(),
-    ],
-    css: {
-      preprocessorMaxWorkers: true, // number of CPUs minus 1
-    },
   },
   nuxid: {
     elementPlus: {
@@ -32,6 +23,9 @@ export default defineNuxtConfig({
         mode: 'svg',
         provider: 'local',
       },
+    },
+    fetcher: {
+      enabled: true,
     },
   },
   i18n: {
