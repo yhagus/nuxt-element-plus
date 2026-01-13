@@ -1,6 +1,6 @@
-const nuxtApp = useNuxtApp();
-const title = ref<string>(nuxtApp.$config.public.appTitle ?? '');
 export function useTitle() {
+  const nuxtApp = useNuxtApp();
+  const title = ref<string>(nuxtApp.$config.public.appTitle ?? '');
   const getTitle = () => {
     return title.value;
   };
