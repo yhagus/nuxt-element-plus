@@ -1,5 +1,9 @@
 const HOME_PATH = '/sign-in';
 export default defineNuxtRouteMiddleware(async (to) => {
+  if (import.meta.server) {
+    return;
+  }
+
   const auth = useAuthStore();
 
   if (to.path === HOME_PATH) {
