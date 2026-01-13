@@ -2,6 +2,7 @@
 const props = defineProps<{
   modelValue?: any;
   type?: string;
+  placeholder?: string;
   rows?: number;
 }>();
 defineEmits<{
@@ -10,7 +11,7 @@ defineEmits<{
 </script>
 
 <template>
-  <ElInput :model-value="props.modelValue" :type="props.type" :rows="props.rows" :show-password="props.type === 'password'" @update:model-value="$emit('update:modelValue', $event)">
+  <ElInput :model-value="props.modelValue" :placeholder="props.placeholder" :type="props.type" :rows="props.rows" :show-password="props.type === 'password'" @update:model-value="$emit('update:modelValue', $event)">
     <template v-if="$slots.prefix" #prefix>
       <slot name="prefix" />
     </template>
