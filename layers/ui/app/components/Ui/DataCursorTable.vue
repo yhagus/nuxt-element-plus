@@ -46,6 +46,7 @@ interface Emits {
   onExport: [value: { format: string; data: any[] }];
   onLoadMore: [];
   selectionChange: [row: any[]];
+  rowClick: [row: any, column: any, event: Event];
 }
 
 const props = withDefaults(defineProps<DataTableProps>(), {
@@ -168,6 +169,9 @@ function handleColumnToggle(prop: string) {
   }
   // Persist the changes
   updateConfig(tableColumns.value);
+}
+function handleRowClick(row: any, column: any, event: Event) {
+  emit('rowClick', row, column, event);
 }
 
 watch(columns, (loadedSavedColumns) => {
@@ -383,6 +387,7 @@ watch(columns, (loadedSavedColumns) => {
         :stripe="props.stripe"
         :row-class-name="props.rowClassName"
         :span-method="props.spanMethod"
+        @row-click="handleRowClick"
         @selection-change="$emit('selectionChange', $event)"
       >
         <template v-for="(column) in visibleColumns" :key="column.label">
