@@ -1,6 +1,6 @@
 <script setup lang="ts">
 interface DropdownProps {
-  trigger?: 'click' | 'contextmenu' | 'focus' | 'hover';
+  trigger?: Array<'click' | 'contextmenu' | 'hover'> | 'click' | 'contextmenu' | 'hover';
   dropdownItems?: DropdownItem[];
   value?: string;
 }
@@ -8,7 +8,7 @@ const props = defineProps<DropdownProps>();
 </script>
 
 <template>
-  <el-dropdown :trigger="props.trigger">
+  <ElDropdown :trigger="props.trigger">
     <slot />
     <template v-if="$slots.dropdown" #dropdown>
       <slot name="dropdown" />
@@ -29,7 +29,7 @@ const props = defineProps<DropdownProps>();
         </template>
       </el-dropdown-menu>
     </template>
-  </el-dropdown>
+  </ElDropdown>
 </template>
 
 <style scoped lang="scss">

@@ -1,22 +1,4 @@
-import moment from 'moment/min/moment-with-locales';
 import { useRoute, useRouter } from 'vue-router';
-
-export function momentJs(
-  date: string | Date | number,
-  style?: 'format' | 'relative' | 'calendar',
-  format?: string,
-) {
-  switch (style) {
-    case 'format':
-      return moment(date).locale('en').format(format);
-    case 'relative':
-      return moment(date).locale('en').fromNow();
-    case 'calendar':
-      return moment(date).locale('en').calendar();
-    default:
-      return moment(date).locale('en');
-  }
-}
 
 export function URLRouteQuery(query: any, route?: string) {
   const $route = useRoute();

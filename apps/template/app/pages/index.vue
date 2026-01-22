@@ -5,7 +5,7 @@ definePageMeta({
 </script>
 
 <template>
-  <div />
+  <ElButton></ElButton>
 </template>
 
 <style scoped>

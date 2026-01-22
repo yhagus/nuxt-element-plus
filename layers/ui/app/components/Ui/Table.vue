@@ -27,7 +27,7 @@ function handleSelectionChange(newSelection: any[]) {
 
 <template>
   <div>
-    <el-table :size="props.size ?? 'small'" :data="props.data" :span-method="props.spanMethod" :row-class-name="props.rowClassName" :stripe="props.stripe" :border="props.border" @row-click="onRowClick" @selection-change="handleSelectionChange">
+    <ElTable :size="props.size ?? 'small'" :data="props.data" :span-method="props.spanMethod" :row-class-name="props.rowClassName" :stripe="props.stripe" :border="props.border" @row-click="onRowClick" @selection-change="handleSelectionChange">
       <template #empty>
         <div class="flex items-center justify-center p-10 text-gray-500">
           <!-- Loading Spinner -->
@@ -45,7 +45,7 @@ function handleSelectionChange(newSelection: any[]) {
         </div>
       </template>
       <slot />
-    </el-table>
+    </ElTable>
   </div>
 </template>
 
