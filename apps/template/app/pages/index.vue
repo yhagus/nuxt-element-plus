@@ -1,11 +1,11 @@
 <script setup lang="ts">
 definePageMeta({
-  layout: 'theme-classic-billing',
+  layout: 'theme-modern-1',
 });
 </script>
 
 <template>
-  <ElButton></ElButton>
+  OK
 </template>
 
 <style scoped>

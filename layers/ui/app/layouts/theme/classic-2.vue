@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { defineComponent, h, onBeforeUnmount, onMounted, resolveComponent } from 'vue';
-import type { PropType } from 'vue';
+import { onBeforeUnmount, onMounted } from 'vue';
 
 interface ClassicMenuItem {
   id: string;
@@ -16,6 +15,13 @@ interface HeaderAction {
   id: string;
   label: string;
   icon: string;
+}
+
+interface NotificationItem {
+  id: string;
+  title: string;
+  body: string;
+  href: string;
 }
 
 interface ClassicLayoutProps {
@@ -41,166 +47,51 @@ const props = withDefaults(defineProps<ClassicLayoutProps>(), {
   contentBackground: '#ecf0f5',
   logoSrc: '/logo.png',
   logoAlt: 'Logo',
-  brandTitle: 'AdminLTE Classic',
+  brandTitle: 'Admin',
 });
 
 const sidebarOpen = ref(false);
 const sidebarCollapsed = ref(false);
 const isDesktop = ref(false);
 const route = useRoute();
+const { title } = useTitle();
+const { user } = useAuthStore();
+
+const userName = computed(() => {
+  return user.value?.username ?? user.value?.email ?? '';
+});
 
 const menuItems = ref<ClassicMenuItem[]>([
   {
     id: 'dashboard',
     label: 'Dashboard',
     icon: 'lucide:layout-dashboard',
-    route: '/authenticated',
+    route: '/',
   },
   {
-    id: 'widgets',
-    label: 'Widgets',
-    icon: 'lucide:boxes',
-    badge: 'New',
-    badgeType: 'success',
+    id: 'settings',
+    label: 'Pengaturan',
+    icon: 'lucide:cog',
+    route: '/settings',
     children: [
       {
-        id: 'widgets-small',
-        label: 'Small Boxes',
-        route: '/widgets/small',
-      },
-      {
-        id: 'widgets-infobox',
-        label: 'Info Boxes',
-        route: '/widgets/info-boxes',
-      },
-    ],
-  },
-  {
-    id: 'layout',
-    label: 'Layout Options',
-    icon: 'lucide:panel-right',
-    children: [
-      {
-        id: 'layout-top',
-        label: 'Top Navigation',
-        route: '/layout/top',
-      },
-      {
-        id: 'layout-boxed',
-        label: 'Boxed',
-        route: '/layout/boxed',
-      },
-      {
-        id: 'layout-fixed',
-        label: 'Fixed Sidebar',
-        route: '/layout/fixed',
-      },
-    ],
-  },
-  {
-    id: 'components',
-    label: 'UI Components',
-    icon: 'lucide:palette',
-    children: [
-      {
-        id: 'components-general',
-        label: 'General',
-        route: '/ui/general',
-      },
-      {
-        id: 'components-icons',
-        label: 'Icons',
-        route: '/ui/icons',
-      },
-      {
-        id: 'components-buttons',
-        label: 'Buttons',
-        route: '/ui/buttons',
-      },
-      {
-        id: 'components-nested',
-        label: 'Nested Menus',
-        children: [
-          {
-            id: 'components-nested-level-1',
-            label: 'Level One',
-            route: '/ui/nested/level-1',
-          },
-          {
-            id: 'components-nested-level-2',
-            label: 'Level Two',
-            children: [
-              {
-                id: 'components-nested-level-2-a',
-                label: 'Level Two A',
-                route: '/ui/nested/level-2-a',
-              },
-              {
-                id: 'components-nested-level-2-b',
-                label: 'Level Two B',
-                children: [
-                  {
-                    id: 'components-nested-level-3',
-                    label: 'Level Three',
-                    route: '/ui/nested/level-3',
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: 'forms',
-    label: 'Forms',
-    icon: 'lucide:clipboard-list',
-    children: [
-      {
-        id: 'forms-general',
-        label: 'General Elements',
-        route: '/forms/general',
-      },
-      {
-        id: 'forms-advanced',
-        label: 'Advanced',
-        route: '/forms/advanced',
-      },
-      {
-        id: 'forms-editors',
-        label: 'Editors',
-        route: '/forms/editors',
-      },
-    ],
-  },
-  {
-    id: 'tables',
-    label: 'Tables',
-    icon: 'lucide:table',
-    children: [
-      {
-        id: 'tables-simple',
-        label: 'Simple Tables',
-        route: '/tables/simple',
-      },
-      {
-        id: 'tables-data',
-        label: 'Data Tables',
-        route: '/tables/data',
+        id: 'partners',
+        label: 'Partner',
+        icon: 'lucide:handshake',
+        route: '/settings/partners',
       },
     ],
   },
 ]);
 
 const headerActions = ref<HeaderAction[]>([
-  { id: 'search', label: 'Search', icon: 'lucide:search' },
-  { id: 'tasks', label: 'Tasks', icon: 'lucide:list-checks' },
-  { id: 'fullscreen', label: 'Fullscreen', icon: 'lucide:maximize' },
+  // { id: 'search', label: 'Search', icon: 'lucide:search' },
+  // { id: 'tasks', label: 'Tasks', icon: 'lucide:list-checks' },
+  // { id: 'fullscreen', label: 'Fullscreen', icon: 'lucide:maximize' },
   { id: 'logout', label: 'Sign Out', icon: 'lucide:log-out' },
 ]);
 
-const notifications = ref([
+const notifications = ref<NotificationItem[]>([
   {
     id: 'notif-1',
     title: 'Server update',
@@ -339,104 +230,17 @@ onBeforeUnmount(() => {
   }
 });
 
-const MenuTree = defineComponent({
-  name: 'MenuTree',
-  props: {
-    items: {
-      type: Array as PropType<ClassicMenuItem[]>,
-      required: true,
-    },
-    depth: {
-      type: Number,
-      default: 0,
-    },
-  },
-  setup(menuProps) {
-    const NuxtLink = resolveComponent('NuxtLink') as any;
-    const Icon = resolveComponent('NIcon') as any;
-    const UiTooltip = resolveComponent('UiTooltip') as any;
-
-    const renderItem = (item: ClassicMenuItem) => {
-      const active = isItemActive(item);
-      const current = hasActiveChild(item);
-      const open = isItemOpen(item);
-
-      const classes = [
-        'menu-item',
-        active && 'is-active',
-        current && 'is-current',
-        open && 'is-open',
-      ].filter(Boolean);
-
-      const labelNodes = [
-        item.icon
-          ? h(Icon, { name: item.icon, class: 'menu-icon' })
-          : h('span', { class: 'menu-bullet' }),
-        h('span', { class: 'menu-label' }, item.label),
-        item.badge
-          ? h(
-              'span',
-              { class: ['menu-badge', `menu-badge--${item.badgeType ?? 'info'}`] },
-              item.badge,
-            )
-          : null,
-        item.children?.length
-          ? h('span', { class: 'menu-caret' })
-          : null,
-      ].filter(Boolean);
-
-      const linkNode = item.route && !item.children?.length
-        ? h(
-            NuxtLink,
-            {
-              to: item.route,
-              class: 'menu-link',
-            },
-            { default: () => labelNodes },
-          )
-        : h(
-            'button',
-            {
-              type: 'button',
-              class: 'menu-link',
-              onClick: () => toggleItem(item),
-            },
-            labelNodes,
-          );
-
-      const node = (sidebarCollapsed.value && isDesktop.value)
-        ? h(
-            UiTooltip,
-            {
-              content: item.label,
-              placement: 'right',
-              showAfter: 500,
-            },
-            { default: () => linkNode },
-          )
-        : linkNode;
-
-      return h('li', {
-        class: classes,
-        style: { '--menu-indent': `${menuProps.depth * 0.75}rem` },
-      }, [
-        node,
-        item.children?.length
-          ? h('div', { class: 'submenu' }, [
-              h(MenuTree, {
-                items: item.children,
-                depth: menuProps.depth + 1,
-              }),
-            ])
-          : null,
-      ]);
-    };
-
-    return () => h('ul', {
-      class: ['menu-level', `menu-level--${menuProps.depth}`],
-    }, menuProps.items.map(renderItem));
-  },
-});
+const menuTreeProps = computed(() => ({
+  items: menuItems.value,
+  openItems: openItems.value,
+  depth: 0,
+  isDesktop: isDesktop.value,
+  collapsed: sidebarCollapsed.value,
+  isItemActive,
+  hasActiveChild,
+  isItemOpen,
+  onToggle: toggleItem,
+}));
 </script>
 
 <template>
@@ -447,11 +251,14 @@ const MenuTree = defineComponent({
           <NIcon name="lucide:menu" />
         </button>
         <div class="brand">
-          <img v-if="logoSrc" :src="logoSrc" :alt="logoAlt" />
+          <img v-if="logoSrc" :src="logoSrc" :alt="logoAlt">
           <span class="brand__title">{{ brandTitle }}</span>
         </div>
       </div>
       <div class="topbar__actions">
+        <span v-if="userName" class="user-name">
+          {{ userName }}
+        </span>
         <div class="notifications">
           <button
             class="icon-button"
@@ -463,7 +270,9 @@ const MenuTree = defineComponent({
             <NIcon name="lucide:bell" />
           </button>
           <div v-if="notificationsOpen" class="notifications__panel">
-            <div class="notifications__header">Notifications</div>
+            <div class="notifications__header">
+              Notifications
+            </div>
             <div class="notifications__list">
               <NuxtLink
                 v-for="item in notifications"
@@ -496,16 +305,16 @@ const MenuTree = defineComponent({
     <div class="layout-body">
       <aside class="sidebar" :class="{ 'is-open': sidebarOpen, 'is-collapsed': sidebarCollapsed }">
         <div class="sidebar__header">
-          <span>MAIN NAVIGATION</span>
+          <span>MENU NAVIGATION</span>
         </div>
         <nav class="sidebar__nav">
-          <MenuTree :items="menuItems" />
+          <LayoutMenuTree v-bind="menuTreeProps" />
         </nav>
       </aside>
 
       <main class="content">
-        <div v-if="$slots.title" class="content__title">
-          <slot name="title" />
+        <div v-if="title" class="content__title">
+          {{ title }}
         </div>
         <div class="content__body">
           <slot />
@@ -548,6 +357,16 @@ const MenuTree = defineComponent({
     align-items: center;
     gap: 0.5rem;
   }
+}
+
+.user-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--classic-header-text);
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .sidebar-toggle {
@@ -616,7 +435,9 @@ const MenuTree = defineComponent({
     opacity: 0;
     pointer-events: none;
     transform: translateY(-6px);
-    transition: opacity 0.15s ease, transform 0.15s ease;
+    transition:
+      opacity 0.15s ease,
+      transform 0.15s ease;
   }
 
   &:hover::after {
@@ -736,7 +557,6 @@ const MenuTree = defineComponent({
   :deep(.submenu) {
     display: none;
   }
-
 }
 
 .content {
@@ -779,7 +599,9 @@ const MenuTree = defineComponent({
   font-size: 14px;
   cursor: pointer;
   text-align: left;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
 }
 
 :deep(.menu-link:hover) {
@@ -863,7 +685,9 @@ const MenuTree = defineComponent({
   max-height: 0;
   overflow: hidden;
   opacity: 0;
-  transition: max-height 0.25s ease, opacity 0.25s ease;
+  transition:
+    max-height 0.25s ease,
+    opacity 0.25s ease;
   padding-left: 0;
 }
 
