@@ -1,4 +1,52 @@
 <script setup lang="ts">
+const menus = [
+  {
+    title: 'Dashboard',
+    icon: 'lucide:layout-dashboard',
+    path: '/',
+  },
+  {
+    title: 'Data Mentah',
+    icon: 'lucide:database',
+    path: '/raw-data',
+    children: [
+      {
+        title: 'FlightRadar24',
+        icon: 'lucide:activity',
+        path: '/raw-data/flradar',
+        children: [
+          {
+            title: 'Airports',
+            icon: 'lucide:map-pin',
+            path: '/raw-data/flradar/airports',
+          },
+          {
+            title: 'Airlines',
+            icon: 'lucide:plane',
+            path: '/raw-data/flradar/airlines',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    title: 'Pengaturan',
+    icon: 'lucide:settings',
+    path: '/settings',
+    children: [
+      {
+        title: 'Role',
+        icon: 'lucide:shield-check',
+        path: '/settings/roles',
+      },
+      {
+        title: 'User',
+        icon: 'lucide:users',
+        path: '/settings/users',
+      },
+    ],
+  },
+];
 </script>
 
 <template>
@@ -10,7 +58,7 @@
         class="sidebar__logo-image"
       >
     </div>
-    <ThemeModernOneLayoutSidebarMenu />
+    <ThemeModernOneLayoutSidebarMenu :menus="menus" />
   </div>
 </template>
 

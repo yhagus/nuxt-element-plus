@@ -46,7 +46,7 @@ function isRouteInMenu(menu: IMenu): boolean {
 }
 
 function indentForLevel(level: number) {
-  return 50 + (level - 1) * 20;
+  return 42 + (level - 1) * 18;
 }
 
 const isExpanded = ref(false);
@@ -114,7 +114,8 @@ watch(
           :style="childIndentStyle"
           @click="handleNavigate(item.path)"
         >
-          {{ item.title }}
+          <NIcon v-if="item.icon" :name="item.icon" class="sidebar-submenu__icon" />
+          <span>{{ item.title }}</span>
         </button>
       </li>
     </ul>
@@ -140,7 +141,7 @@ watch(
   align-items: center;
   width: 100%;
   height: 40px;
-  padding: 0 16px;
+  padding: 0 12px;
   gap: 12px;
   border: 0;
   background-color: rgb(25, 26, 28);
@@ -198,7 +199,7 @@ watch(
   display: flex;
   align-items: center;
   height: 40px;
-  padding: 0 16px;
+  padding: 0 12px;
   background-color: rgb(25, 26, 28);
   border: 0;
   width: 100%;
@@ -266,7 +267,7 @@ watch(
   align-items: center;
   width: 100%;
   height: 40px;
-  padding: 0 16px;
+  padding: 0 12px;
   border: 0;
   background-color: rgb(25, 26, 28);
   color: inherit;
