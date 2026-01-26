@@ -3,9 +3,16 @@ const access = useCookie(ACCESS_TOKEN);
 const dropdownRef = ref<HTMLElement | null>(null);
 const isOpen = ref(false);
 const { user, clearUser } = useAuthStore();
+interface NotificationItem {
+  id: number;
+  title: string;
+  body: string;
+  read: boolean;
+}
+
 const isNotificationsOpen = ref(false);
 
-const notifications = ref([
+const notifications = ref<NotificationItem[]>([
   {
     id: 1,
     title: 'Pembaruan Sistem',
@@ -61,8 +68,8 @@ function markAllRead() {
   }));
 }
 
-function toggleRead(id: number) {
-  notifications.value = notifications.value.map(notification => {
+function toggleRead(id: NotificationItem['id']) {
+  notifications.value = notifications.value.map((notification) => {
     if (notification.id !== id) {
       return notification;
     }
@@ -101,7 +108,7 @@ onBeforeUnmount(() => {
     class="header"
   >
     <div id="__nuxt_breadcrumb" />
-    <div class="header-profile" ref="dropdownRef">
+    <div ref="dropdownRef" class="header-profile">
       <div class="header-profile__notifications">
         <button
           type="button"
@@ -218,7 +225,9 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .header-profile__notif-button:hover,
