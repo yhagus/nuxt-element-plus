@@ -165,12 +165,6 @@ onBeforeUnmount(() => {
           </div>
         </div>
       </div>
-      <div class="header-profile__info">
-        <span class="header-profile__name">{{ displayName }}</span>
-        <div class="header-profile__role">
-          {{ roleLabel }}
-        </div>
-      </div>
       <button type="button" class="header-profile__avatar" @click="toggleDropdown">
         <img
           v-if="user?.avatar?.url"
@@ -181,9 +175,13 @@ onBeforeUnmount(() => {
         <span v-else class="header-profile__avatar-initials">{{ initials }}</span>
       </button>
       <div v-if="isOpen" class="header-profile__menu">
+        <div class="header-profile__menu-header">
+          <span class="header-profile__name">{{ displayName }}</span>
+          <span class="header-profile__role">{{ roleLabel }}</span>
+        </div>
         <button type="button" class="header-profile__menu-item" @click="logout">
           <NIcon class="header-profile__menu-icon" name="i-ph:sign-out-duotone" />
-          {{ $t("auth.logout") }}
+          Sign Out
         </button>
       </div>
     </div>
@@ -341,13 +339,6 @@ onBeforeUnmount(() => {
   white-space: nowrap;
 }
 
-.header-profile__info {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
-}
-
 .header-profile__name {
   font-weight: 600;
   color: #000000;
@@ -407,6 +398,15 @@ onBeforeUnmount(() => {
   padding: 6px;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
   z-index: 20;
+}
+
+.header-profile__menu-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 10px 12px;
+  border-bottom: 1px solid #eeeeee;
+  margin-bottom: 4px;
 }
 
 .header-profile__menu-item {
