@@ -8,12 +8,12 @@ const props = withDefaults(defineProps<{
 
 const route = useRoute();
 
-function handleNavigate(path?: string) {
+async function handleNavigate(path?: string) {
   if (!path) {
     return;
   }
 
-  navigateTo(path, { replace: true });
+  await navigateTo(path, { replace: true });
 }
 
 function isActive(path?: string) {
