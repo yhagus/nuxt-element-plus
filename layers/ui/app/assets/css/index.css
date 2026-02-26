@@ -5,3 +5,38 @@
 @source "../../layouts/";
 @source "../../pages/";
 @source "../../error.vue";
+
+@theme {
+  --color-theme-100: #ffe6f0;
+  --color-theme-400: #fe3384;
+  --color-theme-500: #fd0166;
+  --color-theme-300: #98013d;
+
+  --color-gray-0: #f4f5f6;
+  --color-gray-100: #e8e8e8;
+  --color-gray-200: #c0c0c2;
+  --color-gray-400: #9596a3;
+  --color-gray-500: #8c8c8c;
+  --color-gray-600: #777882;
+  --color-gray-700: #5c5d6b;
+  --color-gray-800: #343539;
+  --color-gray-900: #1a1a1a;
+
+  --color-red-0: #fbe9e6;
+  --color-red-500: #ef4444;
+  --color-red-600: #dc3545;
+  --color-red-800: #d62000;
+
+  --color-blue-0: #ecf5ff;
+  --color-blue-500: #409eff;
+
+  --color-green-0: #e6f7ee;
+  --color-green-100: #e9f7e3;
+  --color-green-300: #9bda80;
+  --color-green-500: #00ac54;
+
+  --color-yellow-0: #fef5e7;
+  --color-yellow-500: #f59e0b;
+
+  --color-primary: #FFD332;
+}

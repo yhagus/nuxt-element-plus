@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({
-  layout: 'theme-modern-1',
+  layout: 'theme-modern-2',
 });
 </script>
 
