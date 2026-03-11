@@ -10,6 +10,10 @@ declare global {
     fixed?: 'right' | 'left';
     type?: 'default' | 'selection' | 'index' | 'expand';
     visible?: boolean;
+    maxWidth?: number;
+    sortable?: boolean;
+    selectable?: (row: any, index: number) => boolean;
+    reserveSelection?: boolean;
     children?: TableColumn[];
   }
 

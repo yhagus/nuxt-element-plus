@@ -181,10 +181,10 @@ onUpdated(() => {
   <div class="min-h-screen border-r-[0.5px] border-[#E6E6E6] bg-gray-900">
     <div class="flex flex-col gap-4 py-4">
       <div v-if="!props.isCollapse" class="h-fit flex mx-auto w-64 px-4 py-8">
-        <img alt="" src="/svg/logo.svg">
+        <img alt="Logo" src="">
       </div>
       <div v-else class="h-fit flex mx-auto w-10 py-6">
-        <img alt="" src="/img/logo-mobile.png">
+        <img alt="Logo Mobile" src="">
       </div>
       <div class="relative">
         <div

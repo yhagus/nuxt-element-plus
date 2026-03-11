@@ -130,7 +130,127 @@ The application expects a REST API backend with:
 - Auto-converts to FormData when files detected: `const form = useForm({ name: '', avatar: null })`
 - Built-in states: `form.processing` (loading), `form.errors` (validation errors)
 - Usage: `<UiForm v-model="form" @submit="submitHandler">`
+- **Create/Edit forms MUST have frontend rules** using rule files in `shared/rules/**` and `createValidationRules` from `@ciwergrp/nuxid` (via auto import / `#imports`).
+- **Apply rules to UiForm with explicit model**: `<UiForm v-model="form" :model="form" :rules="rules" @submit="submitHandler">`
 - Submit: `await api.endpoint.method(form)` - form automatically serialized
+- Rule file example (`shared/rules/<resource>/create-<resource>.rule.ts`):
+
+```ts
+import type { ValidationOptions, ValidationRule } from '#imports';
+import { createValidationRules } from '#imports';
+
+export function createResourceCreateRule(form: Record<string, unknown>) {
+  const definitions: Record<string, ValidationRule[] | { rules: ValidationRule[]; sometimes: (data: Record<string, unknown>) => boolean }> = {
+    name: ['required', 'string', 'max:255'],
+    code: ['nullable', 'string', 'max:50'],
+    quantity: ['required', 'numeric', 'min:1'],
+  };
+
+  const options: ValidationOptions = {
+    attributes: {
+      name: 'Nama',
+      code: 'Kode',
+      quantity: 'Jumlah',
+    },
+    messages: {
+      'name.required': 'Nama wajib diisi.',
+      'quantity.required': 'Jumlah wajib diisi.',
+      'quantity.numeric': 'Jumlah harus berupa angka.',
+      'quantity.min': 'Jumlah minimal 1.',
+    },
+    prepareForValidation: (data) => {
+      if (typeof data.quantity === 'string') {
+        data.quantity = Number(data.quantity);
+      }
+
+      return data;
+    },
+  };
+
+  return createValidationRules(definitions, form, options);
+}
+```
+
+- Form usage example:
+
+```vue
+<script setup lang="ts">
+import { createResourceCreateRule } from '#rules';
+
+const form = useForm({
+  name: null,
+  code: null,
+  quantity: 1,
+});
+
+const rules = createResourceCreateRule(form);
+</script>
+
+<template>
+  <UiForm v-model="form" :model="form" :rules="rules" @submit="handleSubmit">
+    <!-- form fields -->
+  </UiForm>
+</template>
+```
+- Select: If there is something like role_id or roleId in the payload, it most likely mean the data is fetched from other relation. You should use <SelectRole v-model="" /> in that case (it returns string id).
+- Also do if the payload is role_id or roleId, then the form label should be "Role" since "ID" is not very human-readable for end-user.
+  Inside component SelectRole example:
+
+```vue
+<script setup lang="ts">
+import type { RoleEntity } from '#dto';
+
+interface Props {
+  modelValue?: string | null;
+  placeholder?: string;
+}
+
+interface Emits {
+  (e: 'update:modelValue', value: string | null): void;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  placeholder: 'Pilih role',
+});
+const emit = defineEmits<Emits>();
+
+const { data: roleData, loading, refresh } = await api.role.useIndex({
+  query: {
+    take: 200,
+  },
+  immediate: false,
+});
+
+async function handleOpen() {
+  if (loading.value) {
+    return;
+  }
+
+  await refresh();
+}
+
+const roleOptions = computed(() => {
+  return (roleData.value?.data as RoleEntity[] | undefined)?.map(role => ({
+    label: role.name || role.id,
+    value: role.id,
+  })) ?? [];
+});
+</script>
+
+<template>
+  <UiSelect
+    :model-value="props.modelValue"
+    :options="roleOptions"
+    :loading="loading"
+    filterable
+    :placeholder="props.placeholder"
+    @on-open="handleOpen"
+    @update:model-value="value => emit('update:modelValue', value)"
+  />
+</template>
+```
+
+- The above template will be relevant for other form that also uses other's model ID. If it has id, then it's most likely gonna use <Select /> and pick from other specific endpoint.
 
 **UI Component Standards**:
 
@@ -390,7 +510,7 @@ definePageMeta({
 
 <template>
   <div>
-    <UiDataCursorTable
+    <UiDataTable
       table-key="bundles-table"
       :data="tableData"
       :columns="columns"
@@ -398,7 +518,6 @@ definePageMeta({
       :loading="loading"
       :search-value="route.query.search"
       @on-page-change="handlePageChange"
-      @on-load-more="() => loadMore()"
     >
       <template #toolbar>
         <UiButton variant="primary" @click="() => openCreate = true">
@@ -412,7 +531,7 @@ definePageMeta({
           </UiButton>
         </UiDropdown>
       </template>
-    </UiDataCursorTable>
+    </UiDataTable>
   </div>
 
   <UiDialog v-model="openCreate" title="Buat Bundle">

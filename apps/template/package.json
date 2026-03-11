@@ -22,6 +22,6 @@
     "cypress:run": "cypress run"
   },
   "dependencies": {
-    "nuxt": "4.2.1"
+    "nuxt": "4.3.1"
   }
 }

@@ -1,5 +1,7 @@
+import type { AuthorizedEntity } from '#dto';
+
 export function useAuthStore() {
-  const user = useState<User | undefined>('user');
+  const user = useState<AuthorizedEntity | undefined>('user');
   const accessTokenCookie = useCookie<string | null>(ACCESS_TOKEN);
   const refreshTokenCookie = useCookie<string | null>(REFRESH_TOKEN);
   const loggedCookie = useCookie<string | null>('logged');

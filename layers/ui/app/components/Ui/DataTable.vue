@@ -35,23 +35,26 @@ interface DataTableProps {
   filters?: Record<string, FilterOption[]>;
   activeFilters?: ActiveFilter[];
   exportOptions?: ExportOption[];
+  withHeader?: boolean;
 }
 
 interface Emits {
   onReset: [];
+  onRefresh: [];
   onPageChange: [value: { page?: number; limit?: number; search?: string; filters?: Record<string, string> }];
   onSearch: [value: string];
   onFilterChange: [value: { key: string; value: string; active: boolean }];
   onExport: [value: { format: string; data: any[] }];
   selectionChange: [row: any[]];
+  rowClick: [row: any, column: any, event: Event];
 }
 
 const props = withDefaults(defineProps<DataTableProps>(), {
   stripe: true,
+  withHeader: true,
 });
 const emit = defineEmits<Emits>();
 const configColumnKey = `${props.tableKey}-columns-presets`;
-
 
 const { debounce, isEmpty } = useLodash();
 const { columns, updateConfig } = useTableColumnConfig(configColumnKey);
@@ -87,6 +90,14 @@ function resetAllFilters() {
 
 function handleExport(format: string) {
   emit('onExport', { format, data: props.data });
+}
+
+function handleRefresh() {
+  emit('onRefresh');
+}
+
+function handleRowClick(row: any, column: any, event: Event) {
+  emit('rowClick', row, column, event);
 }
 
 const hasActiveFilters = computed(() => {
@@ -155,7 +166,7 @@ watch(columns, (loadedSavedColumns) => {
 <template>
   <div class="w-full">
     <!-- Header Section: Search, Column Visibility, Filters, Toolbar -->
-    <div class="mb-4 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+    <div v-if="props.withHeader" class="mb-4 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
       <!-- Left Side: Search and Controls -->
       <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-2">
         <!-- Search Form -->
@@ -221,6 +232,10 @@ watch(columns, (loadedSavedColumns) => {
               </div>
             </template>
           </ElPopover>
+
+          <UiButton variant="default" title="Refresh" @click="() => handleRefresh()">
+            <NIcon name="lucide:refresh-ccw" :class="{'animate-spin': loading}" />
+          </UiButton>
 
           <!-- Filters Dropdown -->
           <ElPopover v-if="props.filters && Object.keys(props.filters).length > 0" trigger="click" :width="300" :teleported="true">
@@ -350,6 +365,7 @@ watch(columns, (loadedSavedColumns) => {
         :stripe="props.stripe"
         :row-class-name="props.rowClassName"
         :span-method="props.spanMethod"
+        @row-click="handleRowClick"
         @selection-change="$emit('selectionChange', $event)"
       >
         <template v-for="(column) in visibleColumns" :key="column.label">

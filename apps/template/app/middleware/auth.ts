@@ -23,6 +23,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
     }
     catch (e) {
       console.warn(e);
+      auth.reset();
+      return navigateTo(HOME_PATH, { replace: true });
     }
   }
 

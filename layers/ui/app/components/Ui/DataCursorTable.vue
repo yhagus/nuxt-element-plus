@@ -99,12 +99,6 @@ function removeFilter(filter: ActiveFilter) {
   handleFilterChange(filter.key, filter.value, false);
 }
 
-function resetAllFilters() {
-  activeFilters.value = [];
-  searchInput.value = '';
-  emit('onReset');
-}
-
 function handleExport(format: string) {
   emit('onExport', { format, data: props.data });
 }
@@ -119,10 +113,6 @@ function handleLoadMore() {
 function handleRefresh() {
   emit('onRefresh');
 }
-
-const hasActiveFilters = computed(() => {
-  return activeFilters.value.length > 0 || (searchInput.value && searchInput.value.length > 0);
-});
 
 // Watch for changes in activeFilters prop
 watch(() => props.activeFilters, (newFilters) => {
@@ -191,14 +181,14 @@ watch(columns, (loadedSavedColumns) => {
     <!-- Header Section: Search, Column Visibility, Filters, Toolbar -->
     <div v-if="props.withHeader" class="mb-4 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
       <!-- Left Side: Search and Controls -->
-      <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-2">
+      <div class="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-2">
         <!-- Search Form -->
-        <form class="flex flex-shrink-0 gap-2" @submit.prevent="updateSearchInput(searchInput)">
+        <form class="flex w-full items-center gap-2 sm:w-[260px] sm:shrink-0" @submit.prevent="updateSearchInput(searchInput)">
           <UiInput
             :model-value="searchInput"
+            size="small"
             type="text"
             placeholder="Search..."
-            class="w-full sm:w-64"
             @update:model-value="updateSearchInput"
           >
             <template #prefix>
@@ -207,35 +197,26 @@ watch(columns, (loadedSavedColumns) => {
               </svg>
             </template>
           </UiInput>
-          <UiButton variant="primary" type="submit">
-            Search
-          </UiButton>
         </form>
 
         <!-- Controls: Column Visibility & Filters -->
-        <div class="flex items-center">
+        <div class="column__vis flex flex-wrap items-center ms-2">
           <!-- Column Visibility Toggle -->
           <ElPopover trigger="click" :width="250" :teleported="true">
             <template #reference>
-              <UiButton variant="default" title="Column Visibility">
-                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
+              <UiButton variant="default" size="default" title="Column Visibility">
+                <NIcon name="lucide:eye-off" />
               </UiButton>
             </template>
             <template #default>
               <div class="flex flex-col gap-2 text-sm">
-                <div class="border-b border-gray-200 pb-2 font-medium text-gray-900">
-                  Column Visibility
-                </div>
                 <template v-for="column in tableColumns" :key="column.label">
                   <div v-if="column.children && column.children.length > 0" class="flex flex-col gap-1">
-                    <div class="font-medium text-gray-700">
+                    <div class="text-black">
                       {{ column.label }}
                     </div>
                     <div class="ml-3 flex flex-col gap-1">
-                      <ElCheckbox
+                      <UiCheckbox
                         v-for="child in column.children"
                         :key="child.label"
                         :model-value="child.visible"
@@ -245,7 +226,7 @@ watch(columns, (loadedSavedColumns) => {
                     </div>
                   </div>
                   <div v-else>
-                    <ElCheckbox
+                    <UiCheckbox
                       :model-value="column.visible"
                       :label="column.label"
                       @change="() => handleColumnToggle(column.prop as string)"
@@ -256,8 +237,8 @@ watch(columns, (loadedSavedColumns) => {
             </template>
           </ElPopover>
 
-          <UiButton variant="default" title="Refresh" @click="() => handleRefresh()">
-            <NIcon name="lucide:refresh-ccw" :class="{'animate-spin': loading}" />
+          <UiButton variant="default" size="default" title="Refresh" @click="() => handleRefresh()">
+            <NIcon name="lucide:refresh-ccw" :class="{ 'animate-spin': loading }" />
           </UiButton>
 
           <!-- Filters Dropdown -->
@@ -284,7 +265,7 @@ watch(columns, (loadedSavedColumns) => {
                         v-for="option in filterOptions"
                         :key="option.value"
                         :model-value="activeFilters.some(f => f.key === filterKey && f.value === option.value)"
-                        @change="(checked: boolean) => handleFilterChange(filterKey, option.value, checked)"
+                        @change="(checked) => handleFilterChange(filterKey, option.value, !!checked)"
                       >
                         <span class="flex items-center justify-between w-full">
                           <span>{{ option.label }}</span>
@@ -298,13 +279,10 @@ watch(columns, (loadedSavedColumns) => {
             </template>
           </ElPopover>
 
-          <!-- Custom Filter Slot -->
-          <slot name="filters" />
-
           <!-- Export Dropdown -->
           <ElPopover v-if="props.exportOptions && props.exportOptions.length > 0" trigger="click" :width="200" :teleported="true">
             <template #reference>
-              <UiButton variant="default" title="Export Data">
+              <UiButton variant="default" size="default" title="Export Data">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
@@ -333,30 +311,17 @@ watch(columns, (loadedSavedColumns) => {
               </div>
             </template>
           </ElPopover>
-
-          <!-- Reset Button (only show when filters are active) -->
-          <UiButton
-            v-if="hasActiveFilters"
-            variant="default"
-            title="Reset all filters"
-            @click="resetAllFilters"
-          >
-            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
-          </UiButton>
         </div>
       </div>
-
-      <!-- Right Side: Primary Actions -->
-      <div class="flex items-center gap-2">
+      <div class="flex w-full flex-wrap items-center justify-end gap-2 lg:w-auto">
+        <slot name="filter" />
+        <slot name="filters" />
         <slot name="toolbar" />
       </div>
     </div>
 
     <!-- Active Filters Display -->
     <div v-if="activeFilters.length > 0" class="mb-4 flex flex-wrap items-center gap-2">
-      <span class="text-sm font-medium text-gray-700">Active filters:</span>
       <div class="flex flex-wrap gap-2">
         <div
           v-for="filter in activeFilters"
@@ -379,7 +344,7 @@ watch(columns, (loadedSavedColumns) => {
     </div>
 
     <!-- Table -->
-    <div class="overflow-x-auto rounded-lg border border-gray-200 bg-white">
+    <div class="overflow-x-auto rounded-lg bg-white">
       <UiTable
         :data="props.data"
         :loading="props.loading"
@@ -392,8 +357,8 @@ watch(columns, (loadedSavedColumns) => {
       >
         <template v-for="(column) in visibleColumns" :key="column.label">
           <UiTableColumnNested :column="column">
-            <template v-if="$slots[column.prop as string]" #[column.prop]="scope">
-              <slot :name="column.prop" :row="scope.row" :column="scope.col" :index="scope.index" />
+            <template v-for="(_, slotName) in $slots" #[slotName]="scope">
+              <slot :name="slotName" :row="scope.row" :column="scope.col" :index="scope.index" />
             </template>
           </UiTableColumnNested>
         </template>
@@ -401,7 +366,7 @@ watch(columns, (loadedSavedColumns) => {
     </div>
 
     <!-- Load More -->
-    <div v-if="props.meta" class="mt-4 flex items-center justify-between">
+    <div v-if="props.meta" class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <span class="text-sm text-gray-700">
         Showing {{ props.data.length }}{{ normalizedMeta.total ? ` of ${normalizedMeta.total}` : '' }}
       </span>

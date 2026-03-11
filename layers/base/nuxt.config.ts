@@ -13,6 +13,9 @@ export default defineNuxtConfig({
   nuxid: {
     elementPlus: {
       enabled: true,
+      config: {
+        importStyle: 'scss',
+      },
     },
     icon: {
       enabled: true,
@@ -24,7 +27,10 @@ export default defineNuxtConfig({
         provider: 'local',
       },
     },
-    fetcher: {
+    helper: {
+      enabled: true,
+    },
+    validator: {
       enabled: true,
     },
   },
@@ -42,5 +48,6 @@ export default defineNuxtConfig({
   },
   alias: {
     '#dto': fileURLToPath(new URL('./shared/types/dto', import.meta.url)),
+    '#rules': fileURLToPath(new URL('./shared/rules', import.meta.url)),
   },
 });

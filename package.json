@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "dev:template": "pnpm --filter @apps/template dev",
+    "build:template": "pnpm --filter @apps/template build",
     "cypress:open:template": "pnpm --filter @apps/template cypress:open",
     "cypress:run:template": "pnpm --filter @apps/template cypress:run",
     "dev": "pnpm -r dev",
@@ -11,27 +12,27 @@
     "typecheck": "pnpm -r typecheck"
   },
   "dependencies": {
-    "@ciwergrp/nuxid": "^1.6.2",
-    "@iconify-json/lucide": "^1.2.94",
+    "@ciwergrp/nuxid": "^1.7.2",
+    "@iconify-json/lucide": "^1.2.96",
     "@nuxtjs/i18n": "10.2.3",
     "@tailwindcss/vite": "4.2.1",
     "leaflet": "^1.9.4",
     "leaflet-draw": "^1.0.4",
-    "sass": "1.97.3",
+    "sass": "1.98.0",
     "tailwindcss": "4.2.1",
-    "vue": "3.5.29",
+    "vue": "3.5.30",
     "vue-router": "5.0.3"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^7.6.1",
-    "@nuxt/devtools": "^3.2.2",
+    "@antfu/eslint-config": "^7.7.0",
+    "@nuxt/devtools": "^3.2.3",
     "@types/node": "^22",
     "@vitest/coverage-v8": "^4.0.18",
     "@vitest/ui": "^4.0.18",
     "@vue/language-server": "^3.2.5",
     "@vue/test-utils": "^2.4.6",
     "cypress": "^15.11.0",
-    "eslint": "^10.0.2",
+    "eslint": "^10.0.3",
     "eslint-plugin-format": "^2.0.1",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18"

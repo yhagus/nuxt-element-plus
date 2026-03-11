@@ -1,3 +1,4 @@
+import type { AuthorizedEntity } from '#dto';
 import type { NitroFetchOptions } from 'nitropack';
 
 interface LoginResponse {
@@ -8,14 +9,14 @@ interface LoginResponse {
 }
 
 export function authorize() {
-  return (useNuxtApp().$api as typeof $fetch)<User>('/v1/auth/authorize', {
+  return (useNuxtApp().$api as typeof $fetch)<APIResponseBody<AuthorizedEntity>>('/v1/auth/authorize', {
     headers: {
       accept: 'application/json',
     },
   });
 }
-export function login(options?: NitroFetchOptions<any>) {
-  return (useNuxtApp().$api as typeof $fetch)<LoginResponse>('/v1/auth/login', options);
+export function login(form: UseHttp, options?: NitroFetchOptions<any>) {
+  return form.post<LoginResponse>('/v1/auth/login', options);
 }
 export function logout(options?: NitroFetchOptions<any>) {
   return (useNuxtApp().$api as typeof $fetch)('/v1/auth/logout', {
@@ -31,7 +32,7 @@ export function refresh(options?: NitroFetchOptions<any>) {
       authorization: `Bearer ${refreshToken.value}`,
       accept: 'application/json',
     },
-    onResponse({response}) {
+    onResponse({ response }) {
       if (response.ok) {
         refreshCookie(ACCESS_TOKEN);
         refreshCookie(REFRESH_TOKEN);

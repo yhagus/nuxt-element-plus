@@ -6,6 +6,9 @@ export default defineNuxtConfig({
     '../../layers/ui',
   ],
   ssr: false,
+  imports: {
+    dirs: ['api', 'stores'],
+  },
   runtimeConfig: {
     public: {
       appTitle: 'NUXT 4',
