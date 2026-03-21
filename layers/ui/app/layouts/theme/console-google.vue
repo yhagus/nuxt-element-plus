@@ -1,0 +1,1032 @@
+<script setup lang="ts">
+const isSidebarCollapsed = ref(false);
+const cpuRanges = ['1h', '6h', '24h', '7d'] as const;
+const activeCpuRange = ref<(typeof cpuRanges)[number]>('1h');
+
+const sidebarWidth = computed(() => (isSidebarCollapsed.value ? '56px' : '256px'));
+
+function toggleSidebar() {
+  isSidebarCollapsed.value = !isSidebarCollapsed.value;
+}
+</script>
+
+<template>
+  <div class="console-google-layout min-h-screen flex flex-col">
+    <!-- TOP NAV -->
+    <nav class="flex items-center h-[48px] bg-[#202124] px-2 gap-1 z-50 fixed w-full top-0 shadow">
+      <!-- Hamburger -->
+      <button type="button" class="nav-icon p-2 text-white cursor-pointer" @click="toggleSidebar">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+
+      <!-- Google Cloud Logo -->
+      <div class="flex items-center gap-2 ml-1 mr-4">
+        <svg class="w-6 h-6" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M12 6.5l3.5 3.5H15a3 3 0 0 0-6 0h-.5L12 6.5z" />
+          <path fill="#EA4335" d="M8.5 10H6a6 6 0 1 0 9.93-4.5L13.5 8a3 3 0 0 1-5 2z" />
+          <path fill="#34A853" d="M12 15a3 3 0 0 1-2.83-2H6.06A6 6 0 0 0 17.94 13H15A3 3 0 0 1 12 15z" />
+          <circle fill="#4285F4" cx="12" cy="12" r="1.5" />
+        </svg>
+        <span class="text-white font-medium text-sm tracking-wide">Google Cloud</span>
+      </div>
+
+      <!-- Project selector -->
+      <div class="flex items-center gap-1 px-3 py-1 rounded border border-gray-500 cursor-pointer hover:bg-[#303134] transition ml-1">
+        <svg class="w-4 h-4 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M3 4a1 1 0 0 1 1-1h4l2 2h6a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4z" />
+        </svg>
+        <span class="text-gray-200 text-sm font-medium">my-project-2024</span>
+        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </div>
+
+      <!-- Search bar -->
+      <div class="flex-1 mx-4 max-w-xl">
+        <div class="flex items-center bg-[#303134] rounded-full px-4 py-1.5 gap-2 border border-transparent focus-within:border-[#8ab4f8] focus-within:bg-[#202124]">
+          <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8" stroke-width="2" /><path stroke-linecap="round" stroke-width="2" d="M21 21l-4.35-4.35" />
+          </svg>
+          <input class="bg-transparent text-gray-200 text-sm outline-none w-full placeholder-gray-500" placeholder="Search products, resources, docs (/)">
+          <kbd class="text-xs text-gray-500 border border-gray-600 rounded px-1">/</kbd>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-1 ml-auto">
+        <!-- Activate Cloud Shell -->
+        <button class="nav-icon p-2 text-gray-300 cursor-pointer hover:text-white">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+        </button>
+        <!-- Help -->
+        <button class="nav-icon p-2 text-gray-300 cursor-pointer hover:text-white">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </button>
+        <!-- Notifications -->
+        <button class="nav-icon p-2 text-gray-300 cursor-pointer hover:text-white relative">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+          </svg>
+          <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
+        </button>
+        <!-- Settings -->
+        <button class="nav-icon p-2 text-gray-300 cursor-pointer hover:text-white">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </button>
+        <!-- Avatar -->
+        <button class="w-8 h-8 rounded-full bg-[#4285f4] text-white text-sm font-medium flex items-center justify-center ml-1 cursor-pointer">
+          U
+        </button>
+      </div>
+    </nav>
+
+    <div class="flex pt-[48px] h-screen">
+      <!-- SIDEBAR -->
+      <aside class="sidebar bg-white border-r border-gray-200 flex flex-col overflow-hidden fixed top-[48px] bottom-0 z-40" :class="{ collapsed: isSidebarCollapsed }">
+        <div class="overflow-y-auto flex-1 py-2">
+          <!-- Pinned/Home -->
+          <div class="px-2 mb-1">
+            <a href="#" class="sidebar-item active flex items-center gap-3 px-3 py-2 rounded-full text-sm font-medium">
+              <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+              </svg>
+              <span class="sidebar-label">Home</span>
+            </a>
+          </div>
+
+          <!-- Section: Compute -->
+          <div class="px-4 pt-3 pb-1">
+            <span class="sidebar-section-label text-xs font-medium text-gray-500 uppercase tracking-wider">Compute</span>
+          </div>
+          <div class="px-2">
+            <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-full text-sm text-gray-700">
+              <svg class="w-5 h-5 flex-shrink-0 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <rect x="2" y="3" width="20" height="14" rx="2" stroke-width="2" /><path d="M8 21h8m-4-4v4" stroke-width="2" stroke-linecap="round" />
+              </svg>
+              <span class="sidebar-label">Compute Engine</span>
+            </a>
+            <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-full text-sm text-gray-700">
+              <svg class="w-5 h-5 flex-shrink-0 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-width="2" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+              </svg>
+              <span class="sidebar-label">Kubernetes Engine</span>
+            </a>
+            <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-full text-sm text-gray-700">
+              <svg class="w-5 h-5 flex-shrink-0 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-width="2" d="M5 3l14 9-14 9V3z" />
+              </svg>
+              <span class="sidebar-label">Cloud Run</span>
+            </a>
+            <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-full text-sm text-gray-700">
+              <svg class="w-5 h-5 flex-shrink-0 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              <span class="sidebar-label">Cloud Functions</span>
+            </a>
+          </div>
+
+          <!-- Section: Storage -->
+          <div class="px-4 pt-3 pb-1">
+            <span class="sidebar-section-label text-xs font-medium text-gray-500 uppercase tracking-wider">Storage</span>
+          </div>
+          <div class="px-2">
+            <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-full text-sm text-gray-700">
+              <svg class="w-5 h-5 flex-shrink-0 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2 1 3 3 3h10c2 0 3-1 3-3V7c0-2-1-3-3-3H7C5 4 4 5 4 7z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16M8 4v3m8-3v3" />
+              </svg>
+              <span class="sidebar-label">Cloud Storage</span>
+            </a>
+            <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-full text-sm text-gray-700">
+              <svg class="w-5 h-5 flex-shrink-0 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <ellipse cx="12" cy="5" rx="9" ry="3" stroke-width="2" /><path stroke-width="2" d="M21 12c0 1.657-4.03 3-9 3S3 13.657 3 12" /><path stroke-linecap="round" stroke-width="2" d="M3 5v14c0 1.657 4.03 3 9 3s9-1.343 9-3V5" />
+              </svg>
+              <span class="sidebar-label">Cloud SQL</span>
+            </a>
+            <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-full text-sm text-gray-700">
+              <svg class="w-5 h-5 flex-shrink-0 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+              </svg>
+              <span class="sidebar-label">Firestore</span>
+            </a>
+          </div>
+
+          <!-- Section: Networking -->
+          <div class="px-4 pt-3 pb-1">
+            <span class="sidebar-section-label text-xs font-medium text-gray-500 uppercase tracking-wider">Networking</span>
+          </div>
+          <div class="px-2">
+            <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-full text-sm text-gray-700">
+              <svg class="w-5 h-5 flex-shrink-0 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" stroke-width="2" /><path stroke-linecap="round" stroke-width="2" d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20" />
+              </svg>
+              <span class="sidebar-label">VPC Network</span>
+            </a>
+            <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-full text-sm text-gray-700">
+              <svg class="w-5 h-5 flex-shrink-0 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              <span class="sidebar-label">Load Balancing</span>
+            </a>
+          </div>
+
+          <!-- Section: Operations -->
+          <div class="px-4 pt-3 pb-1">
+            <span class="sidebar-section-label text-xs font-medium text-gray-500 uppercase tracking-wider">Operations</span>
+          </div>
+          <div class="px-2">
+            <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-full text-sm text-gray-700">
+              <svg class="w-5 h-5 flex-shrink-0 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+              <span class="sidebar-label">Monitoring</span>
+            </a>
+            <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-full text-sm text-gray-700">
+              <svg class="w-5 h-5 flex-shrink-0 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+              <span class="sidebar-label">Logging</span>
+            </a>
+            <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-full text-sm text-gray-700">
+              <svg class="w-5 h-5 flex-shrink-0 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+              <span class="sidebar-label">Error Reporting</span>
+            </a>
+          </div>
+
+          <div class="px-2 mt-2 pb-2">
+            <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-full text-sm text-[#1967d2] font-medium">
+              <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+              </svg>
+              <span class="sidebar-label">View all products</span>
+            </a>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="flex-1 overflow-y-auto bg-[#f8f9fa]" :style="{ marginLeft: sidebarWidth }">
+        <div class="max-w-[1400px] mx-auto px-6 py-6 fade-in">
+          <!-- Header -->
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <h1 class="text-2xl font-normal text-gray-800">
+                Welcome to Google Cloud Console
+              </h1>
+              <p class="text-sm text-gray-500 mt-0.5">
+                Project: <span class="font-medium text-gray-700">my-project-2024</span> · ID: my-project-2024-391817
+              </p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#1967d2] border border-[#1967d2] rounded hover:bg-[#e8f0fe] transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                Customize
+              </button>
+            </div>
+          </div>
+
+          <!-- Alert Banner -->
+          <div class="flex items-start gap-3 bg-[#fef7e0] border border-[#fcc934] rounded-lg px-4 py-3 mb-6 text-sm">
+            <svg class="w-5 h-5 text-[#f9ab00] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
+            <div class="flex-1">
+              <span class="font-medium text-gray-800">Billing account not linked.</span>
+              <span class="text-gray-600"> Your free trial credits expire in 42 days. <a href="#" class="text-[#1967d2] hover:underline">Enable billing</a> to continue using Google Cloud.</span>
+            </div>
+            <button class="text-gray-400 hover:text-gray-600">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+          </div>
+
+          <!-- Pinned Quick Access -->
+          <div class="grid grid-cols-4 gap-4 mb-6">
+            <!-- Card 1 -->
+            <div class="card bg-white rounded-lg border border-gray-200 p-4 cursor-pointer">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-8 h-8 rounded-lg bg-[#e8f0fe] flex items-center justify-center">
+                  <svg class="w-4 h-4 text-[#4285f4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <rect x="2" y="3" width="20" height="14" rx="2" stroke-width="2" />
+                  </svg>
+                </div>
+                <div>
+                  <div class="text-sm font-medium text-gray-800">
+                    Compute Engine
+                  </div>
+                  <div class="text-xs text-gray-500">
+                    Virtual machines
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-baseline gap-1">
+                <span class="text-2xl font-light text-gray-800">12</span>
+                <span class="text-xs text-gray-500">instances</span>
+              </div>
+              <div class="flex items-center gap-1 mt-1">
+                <span class="w-2 h-2 rounded-full bg-green-500 status-ok flex-shrink-0" />
+                <span class="text-xs text-green-700 font-medium">All running</span>
+              </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="card bg-white rounded-lg border border-gray-200 p-4 cursor-pointer">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-8 h-8 rounded-lg bg-[#e6f4ea] flex items-center justify-center">
+                  <svg class="w-4 h-4 text-[#34a853]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-width="2" d="M12 2L2 7l10 5 10-5-10-5z" />
+                  </svg>
+                </div>
+                <div>
+                  <div class="text-sm font-medium text-gray-800">
+                    GKE Clusters
+                  </div>
+                  <div class="text-xs text-gray-500">
+                    Kubernetes
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-baseline gap-1">
+                <span class="text-2xl font-light text-gray-800">3</span>
+                <span class="text-xs text-gray-500">clusters</span>
+              </div>
+              <div class="flex items-center gap-1 mt-1">
+                <span class="w-2 h-2 rounded-full bg-yellow-400 flex-shrink-0" />
+                <span class="text-xs text-yellow-700 font-medium">1 needs update</span>
+              </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="card bg-white rounded-lg border border-gray-200 p-4 cursor-pointer">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-8 h-8 rounded-lg bg-[#fce8e6] flex items-center justify-center">
+                  <svg class="w-4 h-4 text-[#ea4335]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <ellipse cx="12" cy="5" rx="9" ry="3" stroke-width="2" />
+                    <path stroke-width="2" d="M3 5v14c0 1.657 4.03 3 9 3s9-1.343 9-3V5" />
+                  </svg>
+                </div>
+                <div>
+                  <div class="text-sm font-medium text-gray-800">
+                    Cloud Storage
+                  </div>
+                  <div class="text-xs text-gray-500">
+                    Object storage
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-baseline gap-1">
+                <span class="text-2xl font-light text-gray-800">2.4</span>
+                <span class="text-xs text-gray-500">TB used</span>
+              </div>
+              <div class="flex items-center gap-1 mt-1">
+                <span class="w-2 h-2 rounded-full bg-blue-400 flex-shrink-0" />
+                <span class="text-xs text-blue-700 font-medium">24 buckets</span>
+              </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="card bg-white rounded-lg border border-gray-200 p-4 cursor-pointer">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-8 h-8 rounded-lg bg-[#fff3e0] flex items-center justify-center">
+                  <svg class="w-4 h-4 text-[#f9ab00]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <div class="text-sm font-medium text-gray-800">
+                    Billing
+                  </div>
+                  <div class="text-xs text-gray-500">
+                    Cost overview
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-baseline gap-1">
+                <span class="text-2xl font-light text-gray-800">$284</span>
+                <span class="text-xs text-gray-500">this month</span>
+              </div>
+              <div class="flex items-center gap-1 mt-1">
+                <svg class="w-3 h-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                <span class="text-xs text-green-700 font-medium">+12% vs last month</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Two-column middle section -->
+          <div class="grid grid-cols-3 gap-4 mb-4">
+            <!-- Left: Project info + Monitoring -->
+            <div class="col-span-2 flex flex-col gap-4">
+              <!-- Compute Overview Chart -->
+              <div class="card bg-white rounded-lg border border-gray-200">
+                <div class="flex items-center justify-between px-5 pt-4 pb-2 border-b border-gray-100">
+                  <h2 class="text-sm font-medium text-gray-800">
+                    CPU Utilization — Last 6 hours
+                  </h2>
+                  <div class="flex items-center gap-1">
+                    <button
+                      v-for="range in cpuRanges"
+                      :key="range"
+                      type="button"
+                      class="chip text-xs px-3 py-1 rounded-full"
+                      :class="activeCpuRange === range ? 'bg-[#e8f0fe] text-[#1967d2] font-medium' : 'text-gray-500 hover:bg-gray-100'"
+                      @click="activeCpuRange = range"
+                    >
+                      {{ range }}
+                    </button>
+                  </div>
+                </div>
+                <div class="px-5 py-4">
+                  <!-- SVG line chart -->
+                  <svg viewBox="0 0 600 120" class="w-full" style="height:120px">
+                    <defs>
+                      <linearGradient id="cpuGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#4285f4" stop-opacity="0.2" />
+                        <stop offset="100%" stop-color="#4285f4" stop-opacity="0" />
+                      </linearGradient>
+                    </defs>
+                    <!-- Grid lines -->
+                    <line x1="0" y1="24" x2="600" y2="24" stroke="#f1f3f4" stroke-width="1" />
+                    <line x1="0" y1="48" x2="600" y2="48" stroke="#f1f3f4" stroke-width="1" />
+                    <line x1="0" y1="72" x2="600" y2="72" stroke="#f1f3f4" stroke-width="1" />
+                    <line x1="0" y1="96" x2="600" y2="96" stroke="#f1f3f4" stroke-width="1" />
+                    <!-- Y labels -->
+                    <text x="0" y="22" font-size="9" fill="#9aa0a6">100%</text>
+                    <text x="0" y="46" font-size="9" fill="#9aa0a6">75%</text>
+                    <text x="0" y="70" font-size="9" fill="#9aa0a6">50%</text>
+                    <text x="0" y="94" font-size="9" fill="#9aa0a6">25%</text>
+                    <!-- Area -->
+                    <path d="M30 72 C60 65 90 50 120 55 C150 60 180 40 210 38 C240 35 270 52 300 48 C330 44 360 30 390 28 C420 26 450 38 480 42 C510 46 540 35 570 32 L570 110 L30 110 Z" fill="url(#cpuGrad)" />
+                    <!-- Line -->
+                    <path d="M30 72 C60 65 90 50 120 55 C150 60 180 40 210 38 C240 35 270 52 300 48 C330 44 360 30 390 28 C420 26 450 38 480 42 C510 46 540 35 570 32" fill="none" stroke="#4285f4" stroke-width="2" stroke-linejoin="round" />
+                    <!-- Second line (instance 2) -->
+                    <path d="M30 90 C60 85 90 80 120 75 C150 70 180 65 210 68 C240 71 270 62 300 58 C330 54 360 62 390 58 C420 54 450 60 480 56 C510 52 540 58 570 52" fill="none" stroke="#34a853" stroke-width="1.5" stroke-dasharray="4 2" />
+                    <!-- X labels -->
+                    <text x="30" y="118" font-size="9" fill="#9aa0a6" text-anchor="middle">11:00</text>
+                    <text x="150" y="118" font-size="9" fill="#9aa0a6" text-anchor="middle">12:00</text>
+                    <text x="270" y="118" font-size="9" fill="#9aa0a6" text-anchor="middle">13:00</text>
+                    <text x="390" y="118" font-size="9" fill="#9aa0a6" text-anchor="middle">14:00</text>
+                    <text x="510" y="118" font-size="9" fill="#9aa0a6" text-anchor="middle">15:00</text>
+                  </svg>
+                  <div class="flex items-center gap-4 mt-2">
+                    <div class="flex items-center gap-1.5">
+                      <span class="w-3 h-0.5 bg-[#4285f4] inline-block rounded" /><span class="text-xs text-gray-500">instance-1 (avg 54%)</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <span class="w-3 border-t border-dashed border-[#34a853] inline-block" /><span class="text-xs text-gray-500">instance-2 (avg 38%)</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- VM Instances Table -->
+              <div class="card bg-white rounded-lg border border-gray-200">
+                <div class="flex items-center justify-between px-5 pt-4 pb-3 border-b border-gray-100">
+                  <h2 class="text-sm font-medium text-gray-800">
+                    VM Instances
+                  </h2>
+                  <a href="#" class="text-xs text-[#1967d2] font-medium hover:underline">View all</a>
+                </div>
+                <table class="w-full text-sm">
+                  <thead>
+                    <tr class="text-xs text-gray-500 border-b border-gray-100">
+                      <th class="px-5 py-2.5 text-left font-medium">
+                        Name
+                      </th>
+                      <th class="px-3 py-2.5 text-left font-medium">
+                        Zone
+                      </th>
+                      <th class="px-3 py-2.5 text-left font-medium">
+                        Machine type
+                      </th>
+                      <th class="px-3 py-2.5 text-left font-medium">
+                        Status
+                      </th>
+                      <th class="px-3 py-2.5 text-left font-medium">
+                        CPU
+                      </th>
+                      <th class="px-3 py-2.5 text-left font-medium">
+                        Internal IP
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="metric-row border-b border-gray-50">
+                      <td class="px-5 py-3">
+                        <a href="#" class="text-[#1967d2] hover:underline font-medium">web-server-prod-1</a>
+                      </td>
+                      <td class="px-3 py-3 text-gray-600">
+                        us-central1-a
+                      </td>
+                      <td class="px-3 py-3 text-gray-600">
+                        e2-standard-4
+                      </td>
+                      <td class="px-3 py-3">
+                        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-green-500 status-ok" /><span class="text-green-700 font-medium">Running</span></span>
+                      </td>
+                      <td class="px-3 py-3">
+                        <div class="flex items-center gap-2">
+                          <div class="usage-bar-bg w-16">
+                            <div class="usage-bar-fill bg-[#4285f4]" style="width:67%" />
+                          </div>
+                          <span class="text-gray-600 text-xs">67%</span>
+                        </div>
+                      </td>
+                      <td class="px-3 py-3 text-gray-600 font-mono text-xs">
+                        10.128.0.2
+                      </td>
+                    </tr>
+                    <tr class="metric-row border-b border-gray-50">
+                      <td class="px-5 py-3">
+                        <a href="#" class="text-[#1967d2] hover:underline font-medium">api-server-prod-1</a>
+                      </td>
+                      <td class="px-3 py-3 text-gray-600">
+                        us-east1-b
+                      </td>
+                      <td class="px-3 py-3 text-gray-600">
+                        n2-standard-2
+                      </td>
+                      <td class="px-3 py-3">
+                        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-green-500 status-ok" /><span class="text-green-700 font-medium">Running</span></span>
+                      </td>
+                      <td class="px-3 py-3">
+                        <div class="flex items-center gap-2">
+                          <div class="usage-bar-bg w-16">
+                            <div class="usage-bar-fill bg-[#4285f4]" style="width:32%" />
+                          </div>
+                          <span class="text-gray-600 text-xs">32%</span>
+                        </div>
+                      </td>
+                      <td class="px-3 py-3 text-gray-600 font-mono text-xs">
+                        10.142.0.5
+                      </td>
+                    </tr>
+                    <tr class="metric-row border-b border-gray-50">
+                      <td class="px-5 py-3">
+                        <a href="#" class="text-[#1967d2] hover:underline font-medium">db-replica-2</a>
+                      </td>
+                      <td class="px-3 py-3 text-gray-600">
+                        europe-west1-c
+                      </td>
+                      <td class="px-3 py-3 text-gray-600">
+                        n1-highmem-8
+                      </td>
+                      <td class="px-3 py-3">
+                        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-yellow-400" /><span class="text-yellow-700 font-medium">Staging</span></span>
+                      </td>
+                      <td class="px-3 py-3">
+                        <div class="flex items-center gap-2">
+                          <div class="usage-bar-bg w-16">
+                            <div class="usage-bar-fill bg-yellow-400" style="width:82%" />
+                          </div>
+                          <span class="text-gray-600 text-xs">82%</span>
+                        </div>
+                      </td>
+                      <td class="px-3 py-3 text-gray-600 font-mono text-xs">
+                        10.132.0.8
+                      </td>
+                    </tr>
+                    <tr class="metric-row">
+                      <td class="px-5 py-3">
+                        <a href="#" class="text-[#1967d2] hover:underline font-medium">worker-node-batch</a>
+                      </td>
+                      <td class="px-3 py-3 text-gray-600">
+                        asia-east1-a
+                      </td>
+                      <td class="px-3 py-3 text-gray-600">
+                        c2-standard-8
+                      </td>
+                      <td class="px-3 py-3">
+                        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-gray-400" /><span class="text-gray-500 font-medium">Stopped</span></span>
+                      </td>
+                      <td class="px-3 py-3">
+                        <div class="flex items-center gap-2">
+                          <div class="usage-bar-bg w-16">
+                            <div class="usage-bar-fill bg-gray-300" style="width:0%" />
+                          </div>
+                          <span class="text-gray-400 text-xs">0%</span>
+                        </div>
+                      </td>
+                      <td class="px-3 py-3 text-gray-400 font-mono text-xs">
+                        —
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Right column -->
+            <div class="flex flex-col gap-4">
+              <!-- Project Info -->
+              <div class="card bg-white rounded-lg border border-gray-200 p-5">
+                <h2 class="text-sm font-medium text-gray-800 mb-4">
+                  Project info
+                </h2>
+                <div class="space-y-3 text-sm">
+                  <div>
+                    <div class="text-xs text-gray-500">
+                      Project name
+                    </div>
+                    <div class="text-gray-800 font-medium">
+                      my-project-2024
+                    </div>
+                  </div>
+                  <div>
+                    <div class="text-xs text-gray-500">
+                      Project ID
+                    </div>
+                    <div class="text-gray-800 font-mono text-xs bg-gray-50 px-2 py-1 rounded mt-0.5 flex items-center justify-between">
+                      my-project-2024-391817
+                      <button class="text-gray-400 hover:text-gray-600 ml-2">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="text-xs text-gray-500">
+                      Project number
+                    </div>
+                    <div class="text-gray-800 font-mono text-xs">
+                      391817204551
+                    </div>
+                  </div>
+                  <div>
+                    <div class="text-xs text-gray-500">
+                      Created
+                    </div>
+                    <div class="text-gray-800 text-xs">
+                      Jan 14, 2024, 9:32 AM
+                    </div>
+                  </div>
+                  <div class="pt-2 border-t border-gray-100">
+                    <a href="#" class="text-[#1967d2] text-xs font-medium hover:underline">Go to project settings →</a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Resources Donut -->
+              <div class="card bg-white rounded-lg border border-gray-200 p-5">
+                <h2 class="text-sm font-medium text-gray-800 mb-4">
+                  Resources
+                </h2>
+                <div class="flex justify-center mb-4">
+                  <svg viewBox="0 0 100 100" class="w-28 h-28">
+                    <circle cx="50" cy="50" r="38" fill="none" stroke="#f1f3f4" stroke-width="14" />
+                    <!-- Segments (circumference of r=38 is ~239) -->
+                    <circle cx="50" cy="50" r="38" fill="none" stroke="#4285f4" stroke-width="14" stroke-dasharray="96 143" stroke-dashoffset="0" class="donut-ring" />
+                    <circle cx="50" cy="50" r="38" fill="none" stroke="#34a853" stroke-width="14" stroke-dasharray="60 179" stroke-dashoffset="-96" class="donut-ring" />
+                    <circle cx="50" cy="50" r="38" fill="none" stroke="#fbbc04" stroke-width="14" stroke-dasharray="48 191" stroke-dashoffset="-156" class="donut-ring" />
+                    <circle cx="50" cy="50" r="38" fill="none" stroke="#ea4335" stroke-width="14" stroke-dasharray="35 204" stroke-dashoffset="-204" class="donut-ring" />
+                    <text x="50" y="46" text-anchor="middle" font-size="14" font-weight="500" fill="#202124">$284</text>
+                    <text x="50" y="58" text-anchor="middle" font-size="7" fill="#9aa0a6">this month</text>
+                  </svg>
+                </div>
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-2">
+                      <span class="w-2.5 h-2.5 rounded-sm bg-[#4285f4]" /><span class="text-gray-600">Compute Engine</span>
+                    </div>
+                    <span class="text-gray-800 font-medium">$114</span>
+                  </div>
+                  <div class="flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-2">
+                      <span class="w-2.5 h-2.5 rounded-sm bg-[#34a853]" /><span class="text-gray-600">Cloud Storage</span>
+                    </div>
+                    <span class="text-gray-800 font-medium">$71</span>
+                  </div>
+                  <div class="flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-2">
+                      <span class="w-2.5 h-2.5 rounded-sm bg-[#fbbc04]" /><span class="text-gray-600">Networking</span>
+                    </div>
+                    <span class="text-gray-800 font-medium">$56</span>
+                  </div>
+                  <div class="flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-2">
+                      <span class="w-2.5 h-2.5 rounded-sm bg-[#ea4335]" /><span class="text-gray-600">Other services</span>
+                    </div>
+                    <span class="text-gray-800 font-medium">$43</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- APIs enabled -->
+              <div class="card bg-white rounded-lg border border-gray-200 p-5">
+                <div class="flex items-center justify-between mb-4">
+                  <h2 class="text-sm font-medium text-gray-800">
+                    APIs & Services
+                  </h2>
+                  <a href="#" class="text-xs text-[#1967d2] hover:underline font-medium">Enable</a>
+                </div>
+                <div class="space-y-2.5">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <span class="w-5 h-5 rounded-full bg-[#e8f0fe] flex items-center justify-center">
+                        <svg class="w-3 h-3 text-[#4285f4]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                      </span>
+                      <span class="text-xs text-gray-700">Compute Engine API</span>
+                    </div>
+                    <span class="text-xs text-gray-500">Active</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <span class="w-5 h-5 rounded-full bg-[#e8f0fe] flex items-center justify-center">
+                        <svg class="w-3 h-3 text-[#4285f4]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                      </span>
+                      <span class="text-xs text-gray-700">Cloud Storage API</span>
+                    </div>
+                    <span class="text-xs text-gray-500">Active</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <span class="w-5 h-5 rounded-full bg-[#e8f0fe] flex items-center justify-center">
+                        <svg class="w-3 h-3 text-[#4285f4]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                      </span>
+                      <span class="text-xs text-gray-700">Cloud Run API</span>
+                    </div>
+                    <span class="text-xs text-gray-500">Active</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <span class="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center">
+                        <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                      </span>
+                      <span class="text-xs text-gray-500">BigQuery API</span>
+                    </div>
+                    <span class="text-xs text-gray-400">Disabled</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <section class="card bg-white rounded-lg border border-gray-200 p-5 mb-6">
+            <slot />
+          </section>
+
+          <!-- Bottom Row: Activity + Errors -->
+          <div class="grid grid-cols-2 gap-4 mb-6">
+            <!-- Activity Feed -->
+            <div class="card bg-white rounded-lg border border-gray-200">
+              <div class="flex items-center justify-between px-5 pt-4 pb-3 border-b border-gray-100">
+                <h2 class="text-sm font-medium text-gray-800">
+                  Recent activity
+                </h2>
+                <a href="#" class="text-xs text-[#1967d2] hover:underline font-medium">View all</a>
+              </div>
+              <div class="divide-y divide-gray-50">
+                <div class="flex gap-3 px-5 py-3">
+                  <div class="w-7 h-7 rounded-full bg-[#e8f0fe] flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg class="w-3.5 h-3.5 text-[#4285f4]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-sm text-gray-800">
+                      Created instance <span class="font-medium text-[#1967d2]">web-server-prod-1</span>
+                    </div>
+                    <div class="text-xs text-gray-400 mt-0.5">
+                      by user@company.com · 2 hours ago
+                    </div>
+                  </div>
+                </div>
+                <div class="flex gap-3 px-5 py-3">
+                  <div class="w-7 h-7 rounded-full bg-[#e6f4ea] flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg class="w-3.5 h-3.5 text-[#34a853]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-sm text-gray-800">
+                      Deployed to Cloud Run <span class="font-medium text-[#1967d2]">api-service</span> · revision r12
+                    </div>
+                    <div class="text-xs text-gray-400 mt-0.5">
+                      by ci-service-account · 4 hours ago
+                    </div>
+                  </div>
+                </div>
+                <div class="flex gap-3 px-5 py-3">
+                  <div class="w-7 h-7 rounded-full bg-[#fce8e6] flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg class="w-3.5 h-3.5 text-[#ea4335]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-sm text-gray-800">
+                      Firewall rule updated on <span class="font-medium text-[#1967d2]">default-network</span>
+                    </div>
+                    <div class="text-xs text-gray-400 mt-0.5">
+                      by admin@company.com · 6 hours ago
+                    </div>
+                  </div>
+                </div>
+                <div class="flex gap-3 px-5 py-3">
+                  <div class="w-7 h-7 rounded-full bg-[#fff3e0] flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg class="w-3.5 h-3.5 text-[#f9ab00]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-sm text-gray-800">
+                      Auto-scaled GKE cluster <span class="font-medium text-[#1967d2]">prod-cluster</span> · 3→5 nodes
+                    </div>
+                    <div class="text-xs text-gray-400 mt-0.5">
+                      by kubernetes-engine-robot · 8 hours ago
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Error Reporting -->
+            <div class="card bg-white rounded-lg border border-gray-200">
+              <div class="flex items-center justify-between px-5 pt-4 pb-3 border-b border-gray-100">
+                <h2 class="text-sm font-medium text-gray-800">
+                  Error Reporting
+                </h2>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs text-gray-500">Last 7 days</span>
+                  <a href="#" class="text-xs text-[#1967d2] hover:underline font-medium">View all</a>
+                </div>
+              </div>
+              <div class="px-5 py-3">
+                <div class="flex items-center gap-4 mb-4">
+                  <div class="text-center">
+                    <div class="text-2xl font-light text-[#ea4335]">
+                      24
+                    </div>
+                    <div class="text-xs text-gray-500">
+                      Critical
+                    </div>
+                  </div>
+                  <div class="text-center">
+                    <div class="text-2xl font-light text-[#fbbc04]">
+                      138
+                    </div>
+                    <div class="text-xs text-gray-500">
+                      Warning
+                    </div>
+                  </div>
+                  <div class="text-center">
+                    <div class="text-2xl font-light text-gray-400">
+                      1.2k
+                    </div>
+                    <div class="text-xs text-gray-500">
+                      Info
+                    </div>
+                  </div>
+                  <div class="flex-1">
+                    <div class="sparkline ml-4">
+                      <div class="sparkline-bar red" style="height:30%" />
+                      <div class="sparkline-bar red" style="height:50%" />
+                      <div class="sparkline-bar red" style="height:40%" />
+                      <div class="sparkline-bar red" style="height:70%" />
+                      <div class="sparkline-bar red" style="height:60%" />
+                      <div class="sparkline-bar red" style="height:45%" />
+                      <div class="sparkline-bar red" style="height:80%" />
+                      <div class="sparkline-bar red" style="height:55%" />
+                      <div class="sparkline-bar red" style="height:65%" />
+                      <div class="sparkline-bar red" style="height:90%" />
+                      <div class="sparkline-bar red" style="height:75%" />
+                      <div class="sparkline-bar red" style="height:100%" />
+                    </div>
+                  </div>
+                </div>
+                <div class="space-y-2">
+                  <div class="flex items-start justify-between gap-2 p-2.5 rounded bg-[#fce8e6] hover:bg-[#fad2cf] cursor-pointer transition">
+                    <div class="flex-1 min-w-0">
+                      <div class="text-xs font-medium text-gray-800 truncate">
+                        TypeError: Cannot read property 'data' of undefined
+                      </div>
+                      <div class="text-xs text-gray-500 mt-0.5">
+                        api-service · 142 occurrences
+                      </div>
+                    </div>
+                    <span class="text-xs text-[#ea4335] font-medium flex-shrink-0">Critical</span>
+                  </div>
+                  <div class="flex items-start justify-between gap-2 p-2.5 rounded bg-[#fef7e0] hover:bg-[#fde68a] cursor-pointer transition">
+                    <div class="flex-1 min-w-0">
+                      <div class="text-xs font-medium text-gray-800 truncate">
+                        ConnectionTimeoutError: MySQL timeout after 30s
+                      </div>
+                      <div class="text-xs text-gray-500 mt-0.5">
+                        db-service · 38 occurrences
+                      </div>
+                    </div>
+                    <span class="text-xs text-[#f9ab00] font-medium flex-shrink-0">Warning</span>
+                  </div>
+                  <div class="flex items-start justify-between gap-2 p-2.5 rounded hover:bg-gray-50 cursor-pointer transition">
+                    <div class="flex-1 min-w-0">
+                      <div class="text-xs font-medium text-gray-800 truncate">
+                        CORS policy blocked request from unknown origin
+                      </div>
+                      <div class="text-xs text-gray-500 mt-0.5">
+                        web-server · 17 occurrences
+                      </div>
+                    </div>
+                    <span class="text-xs text-gray-500 font-medium flex-shrink-0">Warning</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.console-google-layout {
+  font-family: 'Google Sans', 'Roboto', sans-serif;
+  background: #f8f9fa;
+}
+
+.console-google-layout ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.console-google-layout ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.console-google-layout ::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.nav-icon:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.sidebar-item {
+  transition: background 0.15s ease;
+}
+
+.sidebar-item:hover {
+  background: #e8f0fe;
+}
+
+.sidebar-item.active {
+  background: #e8f0fe;
+  color: #1967d2;
+}
+
+.sidebar-item.active svg {
+  color: #1967d2;
+}
+
+.card {
+  transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 2px 8px rgba(60, 64, 67, 0.3);
+}
+
+.metric-row:hover {
+  background: #f8f9fa;
+}
+
+.chip {
+  transition: background 0.15s;
+}
+
+.chip:hover {
+  background: #e8f0fe;
+}
+
+.sparkline {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 40px;
+}
+
+.sparkline-bar {
+  flex: 1;
+  border-radius: 2px 2px 0 0;
+  background: #4285f4;
+  opacity: 0.7;
+  min-width: 4px;
+}
+
+.sparkline-bar.red {
+  background: #ea4335;
+}
+
+.sparkline-bar.green {
+  background: #34a853;
+}
+
+.sparkline-bar.yellow {
+  background: #fbbc04;
+}
+
+.donut-ring {
+  transform: rotate(-90deg);
+  transform-origin: center;
+}
+
+@keyframes pulse-green {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.status-ok {
+  animation: pulse-green 2s infinite;
+}
+
+.sidebar {
+  width: 256px;
+  transition: width 0.2s;
+}
+
+.sidebar.collapsed {
+  width: 56px;
+}
+
+.sidebar.collapsed .sidebar-label {
+  display: none;
+}
+
+.sidebar.collapsed .sidebar-section-label {
+  display: none;
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.usage-bar-bg {
+  background: #e8eaed;
+  border-radius: 99px;
+  overflow: hidden;
+  height: 6px;
+}
+
+.usage-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+}
+</style>

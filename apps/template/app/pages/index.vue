@@ -1,11 +1,11 @@
 <script setup lang="ts">
 definePageMeta({
-  layout: 'theme-modern-2',
+  layout: 'theme-mongo-atlas',
 });
 </script>
 
 <template>
-  OK
+
 </template>
 
 <style scoped>

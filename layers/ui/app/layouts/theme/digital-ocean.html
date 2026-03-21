@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DigitalOcean Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background: #f5f7fa; }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #c4cdd6; border-radius: 3px; }
+
+    .sidebar { background: #1b2432; }
+    .sidebar-item { transition: background 0.15s ease; }
+    .sidebar-item:hover { background: rgba(255,255,255,0.06); }
+    .sidebar-item.active { background: rgba(255,255,255,0.1); }
+
+    .nav-top { background: #fff; border-bottom: 1px solid #e8edf2; }
+
+    .card { background: #fff; border: 1px solid #e3e8ee; border-radius: 6px; }
+    .card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.06); transition: box-shadow 0.2s; }
+
+    .badge-active { background: #e6f6f2; color: #0ca678; }
+    .badge-off { background: #f0f4f8; color: #8796a7; }
+    .badge-warning { background: #fff8e1; color: #c68a00; }
+
+    .btn-primary { background: #0080ff; color: #fff; transition: background 0.15s; }
+    .btn-primary:hover { background: #006de0; }
+    .btn-outline { border: 1px solid #c8d3de; background: #fff; color: #374151; transition: all 0.15s; }
+    .btn-outline:hover { background: #f5f7fa; border-color: #b0bec5; }
+
+    .progress-bar { background: #e3e8ee; border-radius: 4px; overflow: hidden; }
+    .progress-fill { height: 6px; border-radius: 4px; }
+    .progress-blue { background: #0080ff; }
+    .progress-teal { background: #0ca678; }
+    .progress-orange { background: #f76d00; }
+    .progress-purple { background: #7b61ff; }
+
+    .sparkline { stroke-width: 2; fill: none; }
+
+    .dropdown-arrow { transition: transform 0.2s; }
+    .section-collapse:hover .dropdown-arrow { transform: rotate(-90deg); }
+
+    .tag { background: #f0f4f8; border: 1px solid #e3e8ee; color: #6c7b8b; font-size: 11px; border-radius: 4px; padding: 1px 6px; }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .pulse { animation: pulse-dot 2s infinite; }
+
+    .tooltip { position: relative; }
+    .tooltip:hover::after {
+      content: attr(data-tip);
+      position: absolute; bottom: 110%; left: 50%; transform: translateX(-50%);
+      background: #1b2432; color: #fff; font-size: 11px; padding: 4px 8px;
+      border-radius: 4px; white-space: nowrap; z-index: 50; pointer-events: none;
+    }
+
+    .resource-row:hover { background: #f9fbfd; }
+    .resource-row { transition: background 0.1s; }
+
+    input[type="text"]:focus { outline: none; border-color: #0080ff; box-shadow: 0 0 0 2px rgba(0,128,255,0.15); }
+  </style>
+</head>
+<body class="flex h-screen overflow-hidden text-sm text-gray-800">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar w-56 flex flex-col flex-shrink-0 h-full overflow-y-auto">
+    <!-- Logo -->
+    <div class="flex items-center gap-2 px-4 py-4 border-b border-white/10">
+      <svg viewBox="0 0 42 42" class="w-8 h-8 flex-shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="21" cy="21" r="21" fill="#0080ff"/>
+        <path d="M21 7.5C13.54 7.5 7.5 13.54 7.5 21c0 7.46 6.04 13.5 13.5 13.5v-5.4c-4.47 0-8.1-3.63-8.1-8.1s3.63-8.1 8.1-8.1 8.1 3.63 8.1 8.1h5.4C34.5 13.54 28.46 7.5 21 7.5z" fill="#fff"/>
+        <path d="M21 29.16v4.32h-4.32V29.16H21zM16.68 33.48v-3.24h-3.24v3.24h3.24z" fill="#fff" opacity=".6"/>
+      </svg>
+      <span class="text-white font-semibold text-base tracking-tight">DigitalOcean</span>
+    </div>
+
+    <!-- Create Button -->
+    <div class="px-3 py-3">
+      <button class="btn-primary w-full flex items-center justify-center gap-2 py-2 px-3 rounded text-sm font-medium">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+        Create
+      </button>
+    </div>
+
+    <!-- Nav -->
+    <nav class="flex-1 px-2 py-1 space-y-0.5">
+      <!-- Overview -->
+      <a href="#" class="sidebar-item active flex items-center gap-3 px-3 py-2 rounded text-white text-sm">
+        <svg class="w-4 h-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1" stroke-width="1.8"/><rect x="14" y="3" width="7" height="7" rx="1" stroke-width="1.8"/><rect x="3" y="14" width="7" height="7" rx="1" stroke-width="1.8"/><rect x="14" y="14" width="7" height="7" rx="1" stroke-width="1.8"/></svg>
+        Overview
+      </a>
+
+      <!-- Manage Section -->
+      <div class="pt-3 pb-1 px-3">
+        <span class="text-xs font-semibold text-white/30 uppercase tracking-widest">Manage</span>
+      </div>
+
+      <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded text-white/70 hover:text-white text-sm">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Droplets
+      </a>
+      <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded text-white/70 hover:text-white text-sm">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 7h16M4 12h16M4 17h16"/></svg>
+        Kubernetes
+      </a>
+      <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded text-white/70 hover:text-white text-sm">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2" stroke-width="1.8"/><path stroke-linecap="round" stroke-width="1.8" d="M6 9h12M6 13h8"/></svg>
+        Databases
+      </a>
+      <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded text-white/70 hover:text-white text-sm">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 7l9-4 9 4v10l-9 4-9-4V7z"/></svg>
+        Spaces
+      </a>
+      <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded text-white/70 hover:text-white text-sm">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" stroke-width="1.8"/><path stroke-linecap="round" stroke-width="1.8" d="M12 2v2m0 16v2M2 12h2m16 0h2m-3.05-7.95-1.41 1.41M6.46 17.54l-1.41 1.41m12.9 0-1.41-1.41M6.46 6.46 5.05 5.05"/></svg>
+        App Platform
+      </a>
+      <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded text-white/70 hover:text-white text-sm">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1" stroke-width="1.8"/><path stroke-linecap="round" stroke-width="1.8" d="M14 6h7M14 12h7M14 18h7M3 12h7M3 18h7"/></svg>
+        Load Balancers
+      </a>
+      <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded text-white/70 hover:text-white text-sm">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg>
+        Volumes
+      </a>
+      <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded text-white/70 hover:text-white text-sm">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Networking
+      </a>
+
+      <!-- Dev Section -->
+      <div class="pt-4 pb-1 px-3">
+        <span class="text-xs font-semibold text-white/30 uppercase tracking-widest">Develop</span>
+      </div>
+      <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded text-white/70 hover:text-white text-sm">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" points="16 18 22 12 16 6"/><polyline stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" points="8 6 2 12 8 18"/></svg>
+        API
+      </a>
+      <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded text-white/70 hover:text-white text-sm">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 19v-6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm0 0V9a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v10m-6 0a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2m0 0V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"/></svg>
+        Monitoring
+      </a>
+    </nav>
+
+    <!-- Account -->
+    <div class="border-t border-white/10 p-3">
+      <div class="sidebar-item flex items-center gap-3 px-3 py-2 rounded cursor-pointer">
+        <div class="w-7 h-7 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold text-xs flex-shrink-0">JD</div>
+        <div class="min-w-0">
+          <p class="text-white text-xs font-medium truncate">John Doe</p>
+          <p class="text-white/40 text-xs truncate">john@example.com</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+    <!-- Top Nav -->
+    <header class="nav-top flex items-center gap-3 px-6 py-3 flex-shrink-0 z-10">
+      <!-- Search -->
+      <div class="relative flex-1 max-w-sm">
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" stroke-width="2"/><path stroke-linecap="round" stroke-width="2" d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search resources…" class="w-full pl-9 pr-3 py-1.5 border border-gray-200 rounded text-sm text-gray-700 placeholder-gray-400 bg-gray-50 focus:bg-white"/>
+      </div>
+
+      <!-- Right Actions -->
+      <div class="flex items-center gap-3 ml-auto">
+        <button class="btn-outline flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path stroke-linecap="round" stroke-width="2" d="M12 8v4l3 3"/></svg>
+          Activity
+        </button>
+        <!-- Notification Bell -->
+        <button class="relative w-8 h-8 flex items-center justify-center rounded hover:bg-gray-100 transition">
+          <svg class="w-4.5 h-4.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0 1 18 14.158V11a6.002 6.002 0 0 0-4-5.659V5a2 2 0 1 0-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 1 1-6 0v-1m6 0H9"/></svg>
+          <span class="absolute top-1 right-1 w-2 h-2 bg-blue-500 rounded-full pulse border-2 border-white"></span>
+        </button>
+        <!-- Help -->
+        <button class="w-8 h-8 flex items-center justify-center rounded hover:bg-gray-100 transition">
+          <svg class="w-4.5 h-4.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path stroke-linecap="round" stroke-width="2" d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r=".5" fill="currentColor" stroke-width="0"/></svg>
+        </button>
+        <!-- Avatar -->
+        <div class="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white font-semibold text-xs cursor-pointer">JD</div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="flex-1 overflow-y-auto px-6 py-5 space-y-5">
+
+      <!-- Page Header -->
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-xl font-semibold text-gray-900">Overview</h1>
+          <p class="text-gray-500 text-xs mt-0.5">nyc1 · San Francisco 1</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <select class="border border-gray-200 rounded text-xs text-gray-600 px-2.5 py-1.5 bg-white focus:outline-none focus:border-blue-400">
+            <option>All Projects</option>
+            <option>Production</option>
+            <option>Staging</option>
+          </select>
+          <button class="btn-primary flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+            New Resource
+          </button>
+        </div>
+      </div>
+
+      <!-- Usage Summary Cards -->
+      <div class="grid grid-cols-4 gap-4">
+        <!-- Droplets -->
+        <div class="card p-4 flex flex-col gap-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded bg-blue-50 flex items-center justify-center">
+                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </div>
+              <span class="text-xs font-medium text-gray-700">Droplets</span>
+            </div>
+            <span class="text-xs font-semibold text-gray-900">8 / 25</span>
+          </div>
+          <div class="progress-bar h-1.5">
+            <div class="progress-fill progress-blue" style="width:32%"></div>
+          </div>
+          <p class="text-xs text-gray-400">32% of limit used</p>
+        </div>
+
+        <!-- Bandwidth -->
+        <div class="card p-4 flex flex-col gap-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded bg-teal-50 flex items-center justify-center">
+                <svg class="w-4 h-4 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-1m-4-8-4-4m0 0L8 8m4-4v12"/></svg>
+              </div>
+              <span class="text-xs font-medium text-gray-700">Bandwidth</span>
+            </div>
+            <span class="text-xs font-semibold text-gray-900">1.2 TB</span>
+          </div>
+          <div class="progress-bar h-1.5">
+            <div class="progress-fill progress-teal" style="width:18%"></div>
+          </div>
+          <p class="text-xs text-gray-400">18% of 6.8 TB pool</p>
+        </div>
+
+        <!-- Storage -->
+        <div class="card p-4 flex flex-col gap-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded bg-orange-50 flex items-center justify-center">
+                <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 1 1 0-4h14a2 2 0 1 1 0 4M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8m-9 4h4"/></svg>
+              </div>
+              <span class="text-xs font-medium text-gray-700">Volumes</span>
+            </div>
+            <span class="text-xs font-semibold text-gray-900">320 GB</span>
+          </div>
+          <div class="progress-bar h-1.5">
+            <div class="progress-fill progress-orange" style="width:64%"></div>
+          </div>
+          <p class="text-xs text-gray-400">64% of 500 GB</p>
+        </div>
+
+        <!-- Monthly Bill -->
+        <div class="card p-4 flex flex-col gap-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded bg-purple-50 flex items-center justify-center">
+                <svg class="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+              </div>
+              <span class="text-xs font-medium text-gray-700">Monthly Bill</span>
+            </div>
+            <span class="text-xs font-semibold text-gray-900">$184.20</span>
+          </div>
+          <div class="progress-bar h-1.5">
+            <div class="progress-fill progress-purple" style="width:61%"></div>
+          </div>
+          <p class="text-xs text-gray-400">Est. $301.00 this month</p>
+        </div>
+      </div>
+
+      <!-- Two Column Layout -->
+      <div class="grid grid-cols-3 gap-4">
+
+        <!-- Left: Droplets Table (2 cols) -->
+        <div class="col-span-2 card overflow-hidden">
+          <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+            <h2 class="text-sm font-semibold text-gray-800">Droplets</h2>
+            <div class="flex items-center gap-2">
+              <input type="text" placeholder="Filter…" class="border border-gray-200 rounded text-xs px-2.5 py-1 w-32 bg-gray-50 focus:bg-white"/>
+              <button class="btn-primary text-xs px-2.5 py-1 rounded font-medium">+ Create</button>
+            </div>
+          </div>
+          <table class="w-full text-xs">
+            <thead>
+              <tr class="text-left text-gray-400 font-medium border-b border-gray-100 bg-gray-50">
+                <th class="px-4 py-2">Name</th>
+                <th class="px-3 py-2">Status</th>
+                <th class="px-3 py-2">IP Address</th>
+                <th class="px-3 py-2">Region</th>
+                <th class="px-3 py-2">Size</th>
+                <th class="px-3 py-2 text-right">CPU</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Row 1 -->
+              <tr class="resource-row border-b border-gray-50">
+                <td class="px-4 py-2.5">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded bg-blue-100 flex items-center justify-center flex-shrink-0">
+                      <svg class="w-3 h-3 text-blue-500" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/></svg>
+                    </div>
+                    <div>
+                      <p class="font-medium text-gray-800">web-prod-01</p>
+                      <p class="text-gray-400">Ubuntu 22.04</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-3 py-2.5"><span class="badge-active px-2 py-0.5 rounded-full text-xs font-medium">● Active</span></td>
+                <td class="px-3 py-2.5 font-mono text-gray-600">143.110.185.74</td>
+                <td class="px-3 py-2.5 text-gray-500">NYC1</td>
+                <td class="px-3 py-2.5 text-gray-500">s-2vcpu-4gb</td>
+                <td class="px-3 py-2.5 text-right">
+                  <div class="flex items-center justify-end gap-1.5">
+                    <div class="progress-bar h-1 w-12"><div class="progress-fill progress-teal" style="width:24%"></div></div>
+                    <span class="text-gray-500 w-7 text-right">24%</span>
+                  </div>
+                </td>
+              </tr>
+              <!-- Row 2 -->
+              <tr class="resource-row border-b border-gray-50">
+                <td class="px-4 py-2.5">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded bg-blue-100 flex items-center justify-center flex-shrink-0">
+                      <svg class="w-3 h-3 text-blue-500" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/></svg>
+                    </div>
+                    <div>
+                      <p class="font-medium text-gray-800">api-server-02</p>
+                      <p class="text-gray-400">Debian 11</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-3 py-2.5"><span class="badge-active px-2 py-0.5 rounded-full text-xs font-medium">● Active</span></td>
+                <td class="px-3 py-2.5 font-mono text-gray-600">167.172.12.43</td>
+                <td class="px-3 py-2.5 text-gray-500">SFO3</td>
+                <td class="px-3 py-2.5 text-gray-500">s-4vcpu-8gb</td>
+                <td class="px-3 py-2.5 text-right">
+                  <div class="flex items-center justify-end gap-1.5">
+                    <div class="progress-bar h-1 w-12"><div class="progress-fill progress-orange" style="width:71%"></div></div>
+                    <span class="text-gray-500 w-7 text-right">71%</span>
+                  </div>
+                </td>
+              </tr>
+              <!-- Row 3 -->
+              <tr class="resource-row border-b border-gray-50">
+                <td class="px-4 py-2.5">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded bg-blue-100 flex items-center justify-center flex-shrink-0">
+                      <svg class="w-3 h-3 text-blue-500" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/></svg>
+                    </div>
+                    <div>
+                      <p class="font-medium text-gray-800">worker-node-03</p>
+                      <p class="text-gray-400">Ubuntu 22.04</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-3 py-2.5"><span class="badge-warning px-2 py-0.5 rounded-full text-xs font-medium">● Resizing</span></td>
+                <td class="px-3 py-2.5 font-mono text-gray-600">68.183.24.90</td>
+                <td class="px-3 py-2.5 text-gray-500">AMS3</td>
+                <td class="px-3 py-2.5 text-gray-500">s-2vcpu-2gb</td>
+                <td class="px-3 py-2.5 text-right">
+                  <div class="flex items-center justify-end gap-1.5">
+                    <div class="progress-bar h-1 w-12"><div class="progress-fill progress-blue" style="width:8%"></div></div>
+                    <span class="text-gray-500 w-7 text-right">8%</span>
+                  </div>
+                </td>
+              </tr>
+              <!-- Row 4 -->
+              <tr class="resource-row border-b border-gray-50">
+                <td class="px-4 py-2.5">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded bg-gray-100 flex items-center justify-center flex-shrink-0">
+                      <svg class="w-3 h-3 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/></svg>
+                    </div>
+                    <div>
+                      <p class="font-medium text-gray-800">staging-db-01</p>
+                      <p class="text-gray-400">Ubuntu 20.04</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-3 py-2.5"><span class="badge-off px-2 py-0.5 rounded-full text-xs font-medium">○ Off</span></td>
+                <td class="px-3 py-2.5 font-mono text-gray-400">—</td>
+                <td class="px-3 py-2.5 text-gray-500">NYC1</td>
+                <td class="px-3 py-2.5 text-gray-500">s-1vcpu-2gb</td>
+                <td class="px-3 py-2.5 text-right text-gray-400">—</td>
+              </tr>
+              <!-- Row 5 -->
+              <tr class="resource-row border-b border-gray-50">
+                <td class="px-4 py-2.5">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded bg-blue-100 flex items-center justify-center flex-shrink-0">
+                      <svg class="w-3 h-3 text-blue-500" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/></svg>
+                    </div>
+                    <div>
+                      <p class="font-medium text-gray-800">k8s-node-01</p>
+                      <p class="text-gray-400">Fedora 38</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-3 py-2.5"><span class="badge-active px-2 py-0.5 rounded-full text-xs font-medium">● Active</span></td>
+                <td class="px-3 py-2.5 font-mono text-gray-600">104.248.98.17</td>
+                <td class="px-3 py-2.5 text-gray-500">FRA1</td>
+                <td class="px-3 py-2.5 text-gray-500">s-8vcpu-16gb</td>
+                <td class="px-3 py-2.5 text-right">
+                  <div class="flex items-center justify-end gap-1.5">
+                    <div class="progress-bar h-1 w-12"><div class="progress-fill progress-teal" style="width:45%"></div></div>
+                    <span class="text-gray-500 w-7 text-right">45%</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="px-4 py-2.5 border-t border-gray-100 flex items-center justify-between">
+            <span class="text-xs text-gray-400">Showing 5 of 8 droplets</span>
+            <a href="#" class="text-xs text-blue-500 hover:underline font-medium">View all →</a>
+          </div>
+        </div>
+
+        <!-- Right: Quick Stats (1 col) -->
+        <div class="col-span-1 flex flex-col gap-4">
+
+          <!-- Databases Card -->
+          <div class="card p-4">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-sm font-semibold text-gray-800">Databases</h3>
+              <button class="btn-outline text-xs px-2 py-1 rounded">+ Create</button>
+            </div>
+            <div class="space-y-2">
+              <div class="flex items-center justify-between py-2 border-b border-gray-50">
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded bg-green-50 flex items-center justify-center">
+                    <svg class="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3" stroke-width="2"/><path stroke-width="2" d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path stroke-width="2" d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/></svg>
+                  </div>
+                  <div>
+                    <p class="text-xs font-medium text-gray-800">prod-pg-01</p>
+                    <p class="text-gray-400 text-xs">PostgreSQL 15</p>
+                  </div>
+                </div>
+                <span class="badge-active px-2 py-0.5 rounded-full text-xs">● Online</span>
+              </div>
+              <div class="flex items-center justify-between py-2 border-b border-gray-50">
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded bg-red-50 flex items-center justify-center">
+                    <svg class="w-3.5 h-3.5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3" stroke-width="2"/><path stroke-width="2" d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path stroke-width="2" d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/></svg>
+                  </div>
+                  <div>
+                    <p class="text-xs font-medium text-gray-800">cache-redis-01</p>
+                    <p class="text-gray-400 text-xs">Redis 7</p>
+                  </div>
+                </div>
+                <span class="badge-active px-2 py-0.5 rounded-full text-xs">● Online</span>
+              </div>
+              <div class="flex items-center justify-between py-2">
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded bg-blue-50 flex items-center justify-center">
+                    <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3" stroke-width="2"/><path stroke-width="2" d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path stroke-width="2" d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/></svg>
+                  </div>
+                  <div>
+                    <p class="text-xs font-medium text-gray-800">analytics-mysql</p>
+                    <p class="text-gray-400 text-xs">MySQL 8</p>
+                  </div>
+                </div>
+                <span class="badge-warning px-2 py-0.5 rounded-full text-xs">● Migrating</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Spaces Card -->
+          <div class="card p-4">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-sm font-semibold text-gray-800">Spaces</h3>
+              <span class="text-xs text-gray-400">2 buckets</span>
+            </div>
+            <div class="space-y-2 text-xs">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7l9-4 9 4v10l-9 4-9-4V7z"/></svg>
+                  <span class="text-gray-700 font-medium">prod-assets</span>
+                </div>
+                <span class="text-gray-500">42.1 GB</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7l9-4 9 4v10l-9 4-9-4V7z"/></svg>
+                  <span class="text-gray-700 font-medium">backups-archive</span>
+                </div>
+                <span class="text-gray-500">211.8 GB</span>
+              </div>
+            </div>
+            <div class="mt-3 pt-3 border-t border-gray-100">
+              <div class="flex items-center justify-between text-xs text-gray-400 mb-1">
+                <span>Total used</span>
+                <span class="font-medium text-gray-700">253.9 GB / 500 GB</span>
+              </div>
+              <div class="progress-bar h-1.5">
+                <div class="progress-fill progress-blue" style="width:51%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Alerts -->
+          <div class="card p-4">
+            <h3 class="text-sm font-semibold text-gray-800 mb-3">Recent Alerts</h3>
+            <div class="space-y-2">
+              <div class="flex gap-2.5">
+                <div class="w-1.5 h-1.5 rounded-full bg-orange-400 mt-1.5 flex-shrink-0"></div>
+                <div>
+                  <p class="text-xs font-medium text-gray-800">High CPU on api-server-02</p>
+                  <p class="text-xs text-gray-400">CPU exceeded 70% for 5 min · 2h ago</p>
+                </div>
+              </div>
+              <div class="flex gap-2.5">
+                <div class="w-1.5 h-1.5 rounded-full bg-blue-400 mt-1.5 flex-shrink-0"></div>
+                <div>
+                  <p class="text-xs font-medium text-gray-800">Backup completed</p>
+                  <p class="text-xs text-gray-400">prod-pg-01 snapshot done · 6h ago</p>
+                </div>
+              </div>
+              <div class="flex gap-2.5">
+                <div class="w-1.5 h-1.5 rounded-full bg-green-400 mt-1.5 flex-shrink-0"></div>
+                <div>
+                  <p class="text-xs font-medium text-gray-800">New Droplet created</p>
+                  <p class="text-xs text-gray-400">k8s-node-01 provisioned · 1d ago</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Bottom Row: Network + Activity -->
+      <div class="grid grid-cols-3 gap-4 pb-4">
+
+        <!-- Bandwidth Chart -->
+        <div class="col-span-2 card p-4">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-semibold text-gray-800">Bandwidth Usage</h3>
+            <div class="flex gap-1">
+              <button class="text-xs px-2.5 py-1 rounded bg-blue-500 text-white font-medium">7d</button>
+              <button class="text-xs px-2.5 py-1 rounded text-gray-500 hover:bg-gray-100">30d</button>
+              <button class="text-xs px-2.5 py-1 rounded text-gray-500 hover:bg-gray-100">90d</button>
+            </div>
+          </div>
+          <!-- SVG Chart -->
+          <svg viewBox="0 0 560 120" class="w-full" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#0080ff" stop-opacity="0.15"/>
+                <stop offset="100%" stop-color="#0080ff" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <!-- Grid lines -->
+            <line x1="0" y1="100" x2="560" y2="100" stroke="#e8edf2" stroke-width="1"/>
+            <line x1="0" y1="75" x2="560" y2="75" stroke="#e8edf2" stroke-width="1" stroke-dasharray="3,4"/>
+            <line x1="0" y1="50" x2="560" y2="50" stroke="#e8edf2" stroke-width="1" stroke-dasharray="3,4"/>
+            <line x1="0" y1="25" x2="560" y2="25" stroke="#e8edf2" stroke-width="1" stroke-dasharray="3,4"/>
+            <!-- Area fill -->
+            <path d="M0,80 C40,75 80,60 120,55 C160,50 200,65 240,45 C280,25 320,35 360,30 C400,25 440,40 480,38 C510,36 540,42 560,40 L560,100 L0,100 Z" fill="url(#areaGrad)"/>
+            <!-- Line -->
+            <path d="M0,80 C40,75 80,60 120,55 C160,50 200,65 240,45 C280,25 320,35 360,30 C400,25 440,40 480,38 C510,36 540,42 560,40" stroke="#0080ff" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <!-- Inbound area -->
+            <path d="M0,88 C40,86 80,78 120,74 C160,70 200,80 240,72 C280,64 320,68 360,65 C400,62 440,72 480,70 C510,68 540,74 560,72 L560,100 L0,100 Z" fill="rgba(12,166,120,0.08)"/>
+            <path d="M0,88 C40,86 80,78 120,74 C160,70 200,80 240,72 C280,64 320,68 360,65 C400,62 440,72 480,70 C510,68 540,74 560,72" stroke="#0ca678" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-dasharray="5,3"/>
+            <!-- Labels -->
+            <text x="2" y="113" font-size="9" fill="#a0aec0">Mar 14</text>
+            <text x="78" y="113" font-size="9" fill="#a0aec0">Mar 15</text>
+            <text x="158" y="113" font-size="9" fill="#a0aec0">Mar 16</text>
+            <text x="238" y="113" font-size="9" fill="#a0aec0">Mar 17</text>
+            <text x="318" y="113" font-size="9" fill="#a0aec0">Mar 18</text>
+            <text x="398" y="113" font-size="9" fill="#a0aec0">Mar 19</text>
+            <text x="490" y="113" font-size="9" fill="#a0aec0">Today</text>
+          </svg>
+          <div class="flex gap-4 mt-1">
+            <div class="flex items-center gap-1.5 text-xs text-gray-500"><span class="w-3 h-0.5 bg-blue-500 rounded inline-block"></span> Outbound</div>
+            <div class="flex items-center gap-1.5 text-xs text-gray-500"><span class="w-3 h-0.5 bg-teal-500 rounded inline-block" style="border-top: 1.5px dashed #0ca678; background:none"></span> Inbound</div>
+          </div>
+        </div>
+
+        <!-- Right: Project + Billing -->
+        <div class="col-span-1 flex flex-col gap-4">
+
+          <!-- Projects -->
+          <div class="card p-4">
+            <h3 class="text-sm font-semibold text-gray-800 mb-3">Projects</h3>
+            <div class="space-y-2">
+              <div class="flex items-center justify-between text-xs">
+                <div class="flex items-center gap-2">
+                  <div class="w-2.5 h-2.5 rounded-full bg-blue-500"></div>
+                  <span class="text-gray-700 font-medium">Production</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <span class="tag">6 resources</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between text-xs">
+                <div class="flex items-center gap-2">
+                  <div class="w-2.5 h-2.5 rounded-full bg-orange-400"></div>
+                  <span class="text-gray-700 font-medium">Staging</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <span class="tag">3 resources</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between text-xs">
+                <div class="flex items-center gap-2">
+                  <div class="w-2.5 h-2.5 rounded-full bg-purple-400"></div>
+                  <span class="text-gray-700 font-medium">Dev / Test</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <span class="tag">2 resources</span>
+                </div>
+              </div>
+            </div>
+            <button class="mt-3 w-full text-xs text-blue-500 hover:underline text-left font-medium">+ New Project</button>
+          </div>
+
+          <!-- Billing Summary -->
+          <div class="card p-4">
+            <h3 class="text-sm font-semibold text-gray-800 mb-3">Billing Summary</h3>
+            <div class="space-y-1.5 text-xs">
+              <div class="flex justify-between">
+                <span class="text-gray-500">Droplets</span>
+                <span class="text-gray-800 font-medium">$96.00</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Databases</span>
+                <span class="text-gray-800 font-medium">$60.00</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Spaces Storage</span>
+                <span class="text-gray-800 font-medium">$16.20</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Load Balancers</span>
+                <span class="text-gray-800 font-medium">$12.00</span>
+              </div>
+              <div class="flex justify-between border-t border-gray-100 pt-1.5 mt-1.5">
+                <span class="text-gray-700 font-semibold">Total MTD</span>
+                <span class="text-gray-900 font-bold">$184.20</span>
+              </div>
+            </div>
+            <a href="#" class="mt-3 block text-xs text-blue-500 hover:underline font-medium">View full invoice →</a>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+</body>
+</html>
