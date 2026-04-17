@@ -369,7 +369,7 @@ watch(columns, (loadedSavedColumns) => {
         @selection-change="$emit('selectionChange', $event)"
       >
         <template v-for="(column) in visibleColumns" :key="column.label">
-          <UiTableColumnNested :column="column">
+          <UiTableColumnNested :column="column" :limit="props.meta?.per_page" :page="props.meta?.current_page">
             <template v-if="$slots[column.prop as string]" #[column.prop]="scope">
               <slot :name="column.prop" :row="scope.row" :column="scope.col" :index="scope.index" />
             </template>
@@ -384,13 +384,13 @@ watch(columns, (loadedSavedColumns) => {
       <div class="flex items-center gap-2">
         <span class="text-sm text-gray-700">Rows per page:</span>
         <UiPagination
-          :limit="props.meta.limit"
-          :current-page="props.meta.currentPage"
+          :limit="props.meta.per_page"
+          :current-page="props.meta.current_page"
           :total="props.meta.total ?? 0"
           :page-sizes="[10, 25, 50, 100]"
           layout="sizes"
-          :default-page-size="props.meta.limit ?? 25"
-          :default-current-page="props.meta.currentPage ?? 1"
+          :default-page-size="props.meta.per_page ?? 25"
+          :default-current-page="props.meta.current_page ?? 1"
           @size-change="(pageSize: number) => emit('onPageChange', { limit: pageSize })"
         />
       </div>
@@ -398,16 +398,16 @@ watch(columns, (loadedSavedColumns) => {
       <!-- Right: Pager Navigation -->
       <div class="flex items-center gap-2">
         <span class="text-sm text-gray-700">
-          {{ ((props.meta.currentPage - 1) * props.meta.limit) + 1 }}-{{ Math.min(props.meta.currentPage * props.meta.limit, props.meta.total ?? 0) }} of {{ props.meta.total ?? 0 }}
+          {{ ((props.meta.current_page - 1) * props.meta.per_page) + 1 }}-{{ Math.min(props.meta.current_page * props.meta.per_page, props.meta.total ?? 0) }} of {{ props.meta.total ?? 0 }}
         </span>
         <UiPagination
-          :limit="props.meta.limit"
-          :current-page="props.meta.currentPage"
+          :limit="props.meta.per_page"
+          :current-page="props.meta.current_page"
           :total="props.meta.total ?? 0"
           layout="prev, pager, next"
-          :default-page-size="props.meta.limit ?? 25"
-          :default-current-page="props.meta.currentPage ?? 1"
-          @current-change="(currentPage: number) => emit('onPageChange', { page: currentPage })"
+          :default-page-size="props.meta.per_page ?? 25"
+          :default-current-page="props.meta.current_page ?? 1"
+          @current-change="(current_page: number) => emit('onPageChange', { page: current_page })"
         />
       </div>
     </div>

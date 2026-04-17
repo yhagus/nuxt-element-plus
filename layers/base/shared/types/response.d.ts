@@ -4,7 +4,9 @@ declare global {
     meta: APIResponseMeta;
   }
   interface APIResponseMeta {
-
+    current_page: number;
+    total: number;
+    per_page: number;
   }
 }
 
